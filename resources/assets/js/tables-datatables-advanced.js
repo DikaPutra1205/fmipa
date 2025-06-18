@@ -4,10 +4,10 @@ var dt_ajax = $('.datatables-ajax').DataTable({
   ajax: '/datatable/institusi',
   columns: [
     { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-    { data: 'nama_institusi', name: 'nama_institusi' },
-    { data: 'nama_koordinator', name: 'nama_koordinator' },
-    { data: 'telp_wa', name: 'telp_wa' },
-    { data: 'status', name: 'status' },
+    { data: 'institution', name: 'institution' },
+    { data: 'coordinator_name', name: 'coordinator_name' },
+    { data: 'phone', name: 'phone' },
+    { data: 'is_active', name: 'is_active' },
     { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
   ]
 });

@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Institusi;
+use App\Models\User;
 use Yajra\DataTables\Facades\DataTables;
 
 class InstitusiController extends Controller
 {
     public function getData(Request $request)
     {
-        $data = Institusi::select(['id', 'nama_institusi', 'nama_koordinator', 'telp_wa', 'status']);
+        $data = User::select(['id', 'institution', 'coordinator_name', 'phone', 'is_active'])->where('role' == 'mitra');
+        dd($data);
 
         return DataTables::of($data)
             ->addIndexColumn()
