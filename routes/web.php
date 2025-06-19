@@ -360,10 +360,10 @@ Route::get('/maps/leaflet', [Leaflet::class, 'index'])->name('maps-leaflet');
 Route::get('/laravel/user-management', [UserManagement::class, 'UserManagement'])->name('laravel-example-user-management');
 Route::resource('/user-list', UserManagement::class);
 
-Route::get('/ajax/users', [UserController::class, 'getUsers']);
+
 
 // Buat Baru
 
-
+Route::get('/datatable/user', [UserController::class, 'getData']);
 Route::get('/institusi', [InstitusiController::class, 'index']);
 Route::get('/datatable/institusi', [InstitusiController::class, 'getData']);

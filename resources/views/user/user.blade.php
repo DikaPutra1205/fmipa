@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'DataTables - Advanced Tables')
+@section('title', 'Data TA & Teknisi')
 
 <!-- Vendor Styles -->
 @section('vendor-style')

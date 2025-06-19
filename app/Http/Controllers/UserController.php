@@ -2,30 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
-    // Menyediakan data untuk DataTables
-    public function getAjaxUsers(Request $request)
+    public function getData(Request $request)
     {
-        $users = User::select([
-            'name as full_name',
-            'email',
-            'role as position',
-            'institution as office',
-            'created_at as start_date', // Kalau belum ada data, bisa dummy
-            'id as salary' // Ganti sesuai kolom atau dummy
-        ])->get();
+        $data = User::where ('role','mitra')->select(['id', 'name', 'email', 'phone', 'institution', 'role','coordinator_name', 'is_active']);
 
-        return response()->json(['data' => $users]);
-    }
-
-    // (Opsional) Buat view jika perlu tampilkan Blade
-    public function index()
-    {
-        return view('users.index'); // misal view lo ada di resources/views/users/index.blade.php
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->editColumn('is_active', function ($row) {
+                return $row->is_active == 1 ? 'Aktif' : 'Tidak Aktif';
+            })
+            ->addColumn('aksi', function ($row) {
+                return '<a href="/user/' . $row->id . '/edit" class="btn btn-sm btn-primary">Edit</a>';
+            })
+            ->rawColumns(['aksi'])
+            ->make(true);
     }
 }
