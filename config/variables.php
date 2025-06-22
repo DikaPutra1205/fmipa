@@ -3,7 +3,7 @@
 return [
   "creatorName" => "FMIPA Universitas Indonesia",
   "creatorUrl" => "",
-  "templateName" => "FMIPA Universitas Indonesia",
+  "templateName" => "FMIPA",
   "templateSuffix" => "Bootstrap Admin Template",
   "templateVersion" => "2.0.0",
   "templateFree" => false,

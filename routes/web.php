@@ -1,30 +1,21 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Auth;
 
 
 Route::get('/', function () {
-    if (Auth::check()) {
-        $role = Auth::user()->role;
-
-        return match ($role) {
-            'admin' => redirect('/admin/dashboard'),
-            'mitra' => redirect('/mitra/dashboard'),
-            'teknisi_lab' => redirect('/teknisi_lab/dashboard'),
-            'tenaga_ahli' => redirect('/tenaga_ahli/dashboard'),
-            default => redirect('/dashboard'),
-        };
-    }
-
-    return redirect('/login');
+    return redirect('/dashboard');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Dashboard tunggal
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -32,29 +23,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', RoleMiddleware::class . ':admin'])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return 'Admin Page';
-    });
-});
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user', function () {
+        return view('user.teknisi');
+    })->name('user.teknisi');
 
-Route::middleware(['auth', RoleMiddleware::class . ':mitra'])->group(function () {
-    Route::get('/mitra/dashboard', function () {
-        return 'Mitra Page';
-    });
-});
+    Route::get('/user/data', [UserController::class, 'getData'])->name('user.data');
 
-Route::middleware(['auth', RoleMiddleware::class . ':teknisi_lab'])->group(function () {
-    Route::get('/teknisi_lab/dashboard', function () {
-        return 'Teknisi Lab Page';
-    });
-});
-
-Route::middleware(['auth', RoleMiddleware::class . ':tenaga_ahli'])->group(function () {
-    Route::get('/tenaga_ahli/dashboard', function () {
-        return 'Tenaga Ahli Page';
+    Route::middleware('can:isAdmin')->group(function () {
+        Route::get('/user/{id}/edit', [UserController::class, 'edit']);
+        Route::delete('/user/{id}', [UserController::class, 'destroy']);
     });
 });
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

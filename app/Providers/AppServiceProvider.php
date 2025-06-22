@@ -2,32 +2,32 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Vite;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class AuthServiceProvider extends ServiceProvider
 {
   /**
-   * Register any application services.
+   * The model to policy mappings for the application.
+   *
+   * @var array<class-string, class-string>
    */
-  public function register(): void
-  {
-    //
-  }
+  protected $policies = [
+    // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+  ];
 
   /**
-   * Bootstrap any application services.
+   * Register any authentication / authorization services.
+   *
+   * @return void
    */
-  public function boot(): void
+  public function boot()
   {
-    Vite::useStyleTagAttributes(function (?string $src, string $url, ?array $chunk, ?array $manifest) {
-      if ($src !== null) {
-        return [
-          'class' => preg_match("/(resources\/assets\/vendor\/scss\/(rtl\/)?core)-?.*/i", $src) ? 'template-customizer-core-css' :
-                    (preg_match("/(resources\/assets\/vendor\/scss\/(rtl\/)?theme)-?.*/i", $src) ? 'template-customizer-theme-css' : '')
-        ];
-      }
-      return [];
+    $this->registerPolicies(); // Ini PENTING dan hanya ada di AuthServiceProvider
+
+    // Definisi Gate 'isAdmin'
+    Gate::define('isAdmin', function ($user) {
+      return $user->role === 'admin';
     });
   }
 }

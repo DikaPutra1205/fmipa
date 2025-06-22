@@ -50,6 +50,26 @@ class UserSeeder extends Seeder
                 'role' => 'tenaga_ahli',
                 'coordinator_name' => 'Koordinator Ahli',
                 'is_active' => 1
+            ],
+            [
+                'name' => 'Hapus User',
+                'email' => 'hapustenaga@example.com',
+                'password' => Hash::make('password'),
+                'phone' => '081234567893',
+                'institution' => 'Konsultan Ahli',
+                'role' => 'tenaga_ahli',
+                'coordinator_name' => 'Koordinator Ahli',
+                'is_active' => 1
+            ],
+            [
+                'name' => 'Edit Tenaga Ahli',
+                'email' => 'edittenaga@example.com',
+                'password' => Hash::make('password'),
+                'phone' => '081234567893',
+                'institution' => 'Konsultan Ahli',
+                'role' => 'tenaga_ahli',
+                'coordinator_name' => 'Koordinator Ahli',
+                'is_active' => 1
             ]
         ]);
     }

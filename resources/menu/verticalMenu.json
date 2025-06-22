@@ -7,7 +7,7 @@
       "slug": "dashboard"
     },
     {
-      "url": "/tables/datatables-advanced",
+      "url": "/user",
       "name": "Data TA & Teknisi",
       "icon": "menu-icon tf-icons ti ti-school",
       "slug": "data-ta-teknisi"
@@ -19,21 +19,17 @@
       "slug": "data-institusi-mitra"
     },
     {
-      "name": "Data Inventori",
-      "icon": "menu-icon tf-icons ti ti-book",
-      "slug": "data-inventori",
-      "submenu": [
-        {
-          "url": "app/academy/dashboard",
-          "name": "Alat & Bahan",
-          "slug": "alat-bahan"
-        },
-        {
-          "url": "app/academy/course",
-          "name": "Sample Material",
-          "slug": "sample-material"
-        }
-      ]
+      "menuHeader": "Data Inventori"
+    },
+    {
+      "url": "app/academy/dashboard",
+      "name": "Alat & Bahan",
+      "slug": "alat-bahan"
+    },
+    {
+      "url": "app/academy/course",
+      "name": "Sample Material",
+      "slug": "sample-material"
     },
     {
       "menuHeader": "Hasil Uji Material"
@@ -85,12 +81,6 @@
       "url": "app/chat",
       "name": "Laporan Keuangan",
       "slug": "laporan-keuangan"
-    },
-    {
-      "url": "/",
-      "name": "Logout",
-      "icon": "menu-icon tf-icons ti ti-smart-home",
-      "slug": "logout"
     }
   ]
 }
