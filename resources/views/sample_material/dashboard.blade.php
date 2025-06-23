@@ -20,7 +20,7 @@
 @endsection
 
 @section('page-script')
-@vite(['resources/assets/js/table-data-ta-teknisi.js'])
+@vite(['resources/assets/js/table-data-sampel-material.js'])
 @endsection
 
 @section('content')
@@ -43,7 +43,7 @@
         const userId = btn.getAttribute('data-id');
         if (!userId) return;
   
-        if (confirm('Yakin ingin menghapus user ini?')) {
+        if (confirm('Yakin ingin menghapus data ini?')) {
           fetch('/user/' + userId, {
             method: 'DELETE',
             headers: {
@@ -53,7 +53,7 @@
             }
           })
           .then(res => {
-            if (!res.ok) throw new Error('Gagal hapus user');
+            if (!res.ok) throw new Error('Gagal hapus data sampel & material');
             return res.json();
           })
           .then(() => {
@@ -66,7 +66,7 @@
             }
           })
           .catch(() => {
-            alert('Gagal menghapus user');
+            alert('Gagal menghapus data sampel & material');
           });
         }
       });
@@ -75,16 +75,16 @@
   </script>
   
 <div class="card">
-    <h5 class="card-header">Data TA & Teknisi</h5>
+    <h5 class="card-header">Data Sampel & Material</h5>
     <div class="card-datatable text-nowrap">
         <table class="datatables-ajax table">
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Nama</th>
-                    <th>Role</th>
-                    <th>Nama Koordinator</th>
-                    <th>No Telp</th>
+                    <th>Nama Sampel & Material</th>
+                    <th>Jumlah Sampel</th>
+                    <th>Tanggal Penerimaaan</th>
+                    <th>Tanggal Pengembalian</th>
                     <th>Status</th>
                     @if(Auth::user()->role === 'admin')
                         <th>Aksi</th>

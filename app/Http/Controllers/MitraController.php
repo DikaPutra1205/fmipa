@@ -7,18 +7,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
-class UserController extends Controller
+class MitraController extends Controller
 {
     public function getData(Request $request)
     {
         $user = Auth::user();
         $data = User::query();
 
-        $data->whereIn('role', ['teknisi_lab','tenaga_ahli']);
-
+        if ($user->role !== 'mitra') {
+            // Selain admin, tidak boleh melihat user dengan role admin atau mitra
+            $data->whereIn('role', ['mitra']);
+        } elseif ($user->role === 'mitra') {
+            $data->where('id', $user->id);
+        } else {
+            $data->where('id', null);
+        }
 
         // Ambil kolom yang dibutuhkan
-        $data->select(['id', 'name', 'email', 'phone', 'institution', 'role', 'coordinator_name', 'is_active']);
+        $data->select(['id','institution', 'coordinator_name', 'phone','is_active']);
 
         // Jika admin, tambahkan kolom aksi
         if ($user->role === 'admin') {
@@ -28,7 +34,7 @@ class UserController extends Controller
                     return $row->is_active == 1 ? 'Aktif' : 'Tidak Aktif';
                 })
                 ->addColumn('aksi', function ($row) {
-                    $editUrl = url('/user/' . $row->id . '/edit');
+                    $editUrl = url('/mitra/' . $row->id . '/edit');
                     return '
                     <a href="' . $editUrl . '" class="btn btn-sm btn-icon btn-primary me-1" title="Edit">
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -84,6 +90,6 @@ class UserController extends Controller
         }
 
         $user = User::findOrFail($id);
-        return view('user.edit', compact('user'));
+        return view('mitra.edit', compact('user'));
     }
 }

@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Data Mitra')
+@section('title', 'Data TA & Teknisi')
 
 @section('vendor-style')
 @vite([
@@ -20,7 +20,7 @@
 @endsection
 
 @section('page-script')
-@vite(['resources/assets/js/table-data-mitra.js'])
+@vite(['resources/assets/js/table-data-alat-bahan.js'])
 @endsection
 
 @section('content')
@@ -43,8 +43,8 @@
         const userId = btn.getAttribute('data-id');
         if (!userId) return;
   
-        if (confirm('Yakin ingin menghapus data mitra ini?')) {
-          fetch('/mitra/' + userId, {
+        if (confirm('Yakin ingin menghapus user ini?')) {
+          fetch('/user/' + userId, {
             method: 'DELETE',
             headers: {
               'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -53,11 +53,11 @@
             }
           })
           .then(res => {
-            if (!res.ok) throw new Error('Gagal hapus data mitra');
+            if (!res.ok) throw new Error('Gagal hapus user');
             return res.json();
           })
           .then(() => {
-            alert('Data mitra berhasil dihapus');
+            alert('User berhasil dihapus');
             // Reload datatables pakai instance
             if (window.userTable) {
               window.userTable.ajax.reload();
@@ -66,7 +66,7 @@
             }
           })
           .catch(() => {
-            alert('Gagal menghapus data mtira');
+            alert('Gagal menghapus user');
           });
         }
       });
@@ -75,16 +75,16 @@
   </script>
   
 <div class="card">
-    <h5 class="card-header">Data Mitra</h5>
+    <h5 class="card-header">Data Alat & Bahan</h5>
     <div class="card-datatable text-nowrap">
         <table class="datatables-ajax table">
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Nama Institusi</th>
-                    <th>Nama Koordinator</th>
-                    <th>No Telp</th>
-                    <th>Status</th>
+                    <th>Nama Alat & Bahan</th>
+                    <th>Kondisi Alat</th>
+                    <th>Jumlah Alat</th>
+                    <th>Status Data</th>
                     @if(Auth::user()->role === 'admin')
                         <th>Aksi</th>
                     @endif

@@ -2,11 +2,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // Inisialisasi array kolom
     let columns = [
         { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-        { data: 'name', name: 'name' },
-        { data: 'role', name: 'role' },
-        { data: 'coordinator_name', name: 'coordinator_name' },
-        { data: 'phone', name: 'phone' },
-        { data: 'is_active', name: 'is_active' }
+        { data: 'nama_sampel_material', name: 'nama_sampel_material' },
+        { data: 'jumlah_sampel', name: 'jumlah_sampel' },
+        { data: 'tanggal_penerimaan', name: 'tanggal_penerimaan' },
+        { data: 'tanggal_pengembalian', name: 'tanggal_pengembalian' },
+        { data: 'status_data', name: 'status_data' }
     ];
 
     // Tambahkan kolom aksi jika login sebagai admin
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.userTable = $('.datatables-ajax').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '/teknisi/data',
+        ajax: '/sample-material/data',
         columns: columns
     });
 

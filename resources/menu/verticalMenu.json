@@ -7,13 +7,13 @@
       "slug": "dashboard"
     },
     {
-      "url": "/user",
+      "url": "/teknisi",
       "name": "Data TA & Teknisi",
       "icon": "menu-icon tf-icons ti ti-school",
       "slug": "data-ta-teknisi"
     },
     {
-      "url": "/",
+      "url": "/mitra",
       "name": "Data Institusi & Mitra",
       "icon": "menu-icon tf-icons ti ti-building-bank",
       "slug": "data-institusi-mitra"
@@ -22,12 +22,12 @@
       "menuHeader": "Data Inventori"
     },
     {
-      "url": "app/academy/dashboard",
+      "url": "/alat-bahan",
       "name": "Alat & Bahan",
       "slug": "alat-bahan"
     },
     {
-      "url": "app/academy/course",
+      "url": "sample-material",
       "name": "Sample Material",
       "slug": "sample-material"
     },
