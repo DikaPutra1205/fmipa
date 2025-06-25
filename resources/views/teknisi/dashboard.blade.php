@@ -25,74 +25,80 @@
 
 @section('content')
 @php
-    use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 @endphp
 
 {{-- Definisi userRole untuk JavaScript --}}
 <script>
-    window.userRole = "{{ Auth::user()->role ?? '' }}"; // Pastikan userRole tersedia
+  window.userRole = "{{ Auth::user()->role ?? '' }}"; // Pastikan userRole tersedia
 </script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.datatables-ajax').forEach(function(table) {
-      table.addEventListener('click', function (e) {
+      table.addEventListener('click', function(e) {
         const btn = e.target.closest('.btn-delete-user');
         if (!btn) return;
-  
+
         const userId = btn.getAttribute('data-id');
         if (!userId) return;
-  
+
         if (confirm('Yakin ingin menghapus user ini?')) {
           fetch('/user/' + userId, {
-            method: 'DELETE',
-            headers: {
-              'X-CSRF-TOKEN': '{{ csrf_token() }}',
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
-          })
-          .then(res => {
-            if (!res.ok) throw new Error('Gagal hapus user');
-            return res.json();
-          })
-          .then(() => {
-            alert('User berhasil dihapus');
-            // Reload datatables pakai instance
-            if (window.userTable) {
-              window.userTable.ajax.reload();
-            } else {
-              location.reload(); // fallback
-            }
-          })
-          .catch(() => {
-            alert('Gagal menghapus user');
-          });
+              method: 'DELETE',
+              headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              }
+            })
+            .then(res => {
+              if (!res.ok) throw new Error('Gagal hapus user');
+              return res.json();
+            })
+            .then(() => {
+              alert('User berhasil dihapus');
+              // Reload datatables pakai instance
+              if (window.userTable) {
+                window.userTable.ajax.reload();
+              } else {
+                location.reload(); // fallback
+              }
+            })
+            .catch(() => {
+              alert('Gagal menghapus user');
+            });
         }
       });
     });
   });
-  </script>
-  
+</script>
+
+<div class="demo-inline-spacing mb-3">
+  <button type="button" class="btn btn-primary">
+    <span class="ti-xs ti ti-star me-2"></span>Primary
+  </button>
+</div>
+
 <div class="card">
-    <h5 class="card-header">Data Tenaga Ahli & Teknisi</h5>
-    <div class="card-datatable text-nowrap">
-        <table class="datatables-ajax table">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>Role</th>
-                    <th>Nama Koordinator</th>
-                    <th>No Telp</th>
-                    <th>Status</th>
-                    @if(Auth::user()->role === 'admin')
-                        <th>Aksi</th>
-                    @endif
-                </tr>
-            </thead>
-        </table>
-        
-    </div>
+  <h5 class="card-header">Data Tenaga Ahli & Teknisi</h5>
+  <div class="card-datatable text-nowrap">
+    <table class="datatables-ajax table">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama</th>
+          <th>Role</th>
+          <th>Nama Koordinator</th>
+          <th>No Telp</th>
+          <th>Status</th>
+          @if(Auth::user()->role === 'admin')
+          <th>Aksi</th>
+          @endif
+        </tr>
+      </thead>
+    </table>
+
+  </div>
 </div>
 @endsection
