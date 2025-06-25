@@ -20,7 +20,7 @@
 @endsection
 
 @section('page-script')
-@vite(['resources/assets/js/table-data-sample-material.js'])
+@vite(['resources/assets/js/table-data-sampel-material.js'])
 @endsection
 
 @section('content')

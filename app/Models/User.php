@@ -10,8 +10,15 @@ class User extends Authenticatable
     use HasFactory;
     protected $table = 'users';
     protected $fillable = [
-        'id','name', 'email', 'phone', 'institution',
-        'role', 'coordinator_name', 'is_active'
+        'id',
+        'name',
+        'email',
+        'password',
+        'phone',
+        'institution',
+        'role',
+        'coordinator_name',
+        'is_active'
     ];
 
     protected $hidden = ['password'];

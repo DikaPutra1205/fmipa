@@ -1,5 +1,9 @@
 @extends('layouts/layoutMaster')
 
+@php
+use Illuminate\Support\Facades\Auth;
+@endphp
+
 @section('title', 'Data TA & Teknisi')
 
 @section('vendor-style')
@@ -20,66 +24,30 @@
 @endsection
 
 @section('page-script')
+<script>
+  // Definisi userRole untuk JavaScript
+  window.userRole = "{{ Auth::user()->role ?? '' }}";
+
+  // Definisi rute delete dan CSRF token untuk JavaScript
+  window.routes = {
+      deleteTeknisi: "{{ route('teknisi.destroy', '') }}",
+      getTeknisiData: "{{ route('teknisi.data') }}",
+      csrfToken: "{{ csrf_token() }}" // <--- Tambahkan ini
+  };
+</script>
 @vite(['resources/assets/js/table-data-ta-teknisi.js'])
 @endsection
 
 @section('content')
-@php
-use Illuminate\Support\Facades\Auth;
-@endphp
 
-{{-- Definisi userRole untuk JavaScript --}}
-<script>
-  window.userRole = "{{ Auth::user()->role ?? '' }}"; // Pastikan userRole tersedia
-</script>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.datatables-ajax').forEach(function(table) {
-      table.addEventListener('click', function(e) {
-        const btn = e.target.closest('.btn-delete-user');
-        if (!btn) return;
-
-        const userId = btn.getAttribute('data-id');
-        if (!userId) return;
-
-        if (confirm('Yakin ingin menghapus user ini?')) {
-          fetch('/user/' + userId, {
-              method: 'DELETE',
-              headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              }
-            })
-            .then(res => {
-              if (!res.ok) throw new Error('Gagal hapus user');
-              return res.json();
-            })
-            .then(() => {
-              alert('User berhasil dihapus');
-              // Reload datatables pakai instance
-              if (window.userTable) {
-                window.userTable.ajax.reload();
-              } else {
-                location.reload(); // fallback
-              }
-            })
-            .catch(() => {
-              alert('Gagal menghapus user');
-            });
-        }
-      });
-    });
-  });
-</script>
-
+{{-- Button Tambah Data TA & Teknisi --}}
 <div class="demo-inline-spacing mb-3">
-  <button type="button" class="btn btn-primary">
-    <span class="ti-xs ti ti-star me-2"></span>Primary
-  </button>
+  <a href="{{ route('users.create') }}" class="btn btn-primary waves-effect waves-light">
+    <span class="ti-xs ti ti-plus me-2"></span> Tambah Data TA & Teknisi
+  </a>
 </div>
 
+{{-- Card Data Tenaga Ahli & Teknisi --}}
 <div class="card">
   <h5 class="card-header">Data Tenaga Ahli & Teknisi</h5>
   <div class="card-datatable text-nowrap">
@@ -88,6 +56,7 @@ use Illuminate\Support\Facades\Auth;
         <tr>
           <th>No</th>
           <th>Nama</th>
+          <th>Email</th>
           <th>Role</th>
           <th>Nama Koordinator</th>
           <th>No Telp</th>
@@ -98,7 +67,26 @@ use Illuminate\Support\Facades\Auth;
         </tr>
       </thead>
     </table>
+  </div>
+</div>
 
+<!-- Modal Konfirmasi Hapus Data -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalTitle">Konfirmasi Hapus Data</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Apakah Anda yakin ingin menghapus data <strong id="modalUserName"></strong> (ID: <span id="modalUserId"></span>)?</p>
+        <p class="text-danger">Data yang sudah dihapus tidak dapat dikembalikan.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-danger" id="btnConfirmDelete">Hapus Data</button>
+      </div>
+    </div>
   </div>
 </div>
 @endsection

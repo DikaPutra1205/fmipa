@@ -31,12 +31,13 @@ Route::middleware(['auth'])->group(function () {
         return view('teknisi.dashboard');
     })->name('teknisi.dashboard');
 
-    Route::get('/teknisi/data', [UserController::class, 'getData'])->name('teknisi.dashboard');
+    Route::get('/teknisi/data', [UserController::class, 'getData'])->name('teknisi.data');
 
-    Route::middleware('can:isAdmin')->group(function () {
-        Route::get('/teknisi/{id}/edit', [UserController::class, 'edit']);
-        Route::delete('/teknisi/{id}', [UserController::class, 'destroy']);
-    });
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::get('/teknisi/{id}/edit', [UserController::class, 'edit'])->name('teknisi.edit');
+    Route::put('/teknisi/{id}', [UserController::class, 'update'])->name('teknisi.update');
+    Route::delete('/teknisi/{id}', [UserController::class, 'destroy'])->name('teknisi.destroy');
 });
 
 
@@ -76,7 +77,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/sample-material', function () {
         return view('sample_material.dashboard');
     })->name('sample_material.dashboard');
-    
+
     Route::get('/sample-material/data', [SampelMaterialController::class, 'getData'])->name('sample_material.data');
 
     // Rute untuk Admin (jika ada edit/delete untuk Sample Material)
