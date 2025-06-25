@@ -1,6 +1,10 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Data Mitra')
+@php
+use Illuminate\Support\Facades\Auth;
+@endphp
+
+@section('title', 'Mitra')
 
 @section('vendor-style')
 @vite([
@@ -20,78 +24,67 @@
 @endsection
 
 @section('page-script')
+<script>
+  // Definisi userRole untuk JavaScript
+  window.userRole = "{{ Auth::user()->role ?? '' }}";
+
+  // Definisi rute delete dan CSRF token untuk JavaScript
+  window.routes = {
+      deleteTeknisi: "{{ route('mitra.destroy', '') }}",
+      getTeknisiData: "{{ route('mitra.data') }}",
+      csrfToken: "{{ csrf_token() }}" // <--- Tambahkan ini
+  };
+</script>
 @vite(['resources/assets/js/table-data-mitra.js'])
 @endsection
 
 @section('content')
-@php
-    use Illuminate\Support\Facades\Auth;
-@endphp
 
-{{-- Definisi userRole untuk JavaScript --}}
-<script>
-    window.userRole = "{{ Auth::user()->role ?? '' }}"; // Pastikan userRole tersedia
-</script>
+{{-- Button Tambah Mitra --}}
+<div class="demo-inline-spacing mb-3">
+  <a href="{{ route('mitra.create') }}" class="btn btn-primary waves-effect waves-light">
+    <span class="ti-xs ti ti-plus me-2"></span> Tambah Mitra
+  </a>
+</div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.datatables-ajax').forEach(function(table) {
-      table.addEventListener('click', function (e) {
-        const btn = e.target.closest('.btn-delete-user');
-        if (!btn) return;
-  
-        const userId = btn.getAttribute('data-id');
-        if (!userId) return;
-  
-        if (confirm('Yakin ingin menghapus data mitra ini?')) {
-          fetch('/mitra/' + userId, {
-            method: 'DELETE',
-            headers: {
-              'X-CSRF-TOKEN': '{{ csrf_token() }}',
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
-          })
-          .then(res => {
-            if (!res.ok) throw new Error('Gagal hapus data mitra');
-            return res.json();
-          })
-          .then(() => {
-            alert('Data mitra berhasil dihapus');
-            // Reload datatables pakai instance
-            if (window.userTable) {
-              window.userTable.ajax.reload();
-            } else {
-              location.reload(); // fallback
-            }
-          })
-          .catch(() => {
-            alert('Gagal menghapus data mtira');
-          });
-        }
-      });
-    });
-  });
-  </script>
-  
+{{-- Card Data Mitra --}}
 <div class="card">
-    <h5 class="card-header">Data Mitra</h5>
-    <div class="card-datatable text-nowrap">
-        <table class="datatables-ajax table">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama Institusi</th>
-                    <th>Nama Koordinator</th>
-                    <th>No Telp</th>
-                    <th>Status</th>
-                    @if(Auth::user()->role === 'admin')
-                        <th>Aksi</th>
-                    @endif
-                </tr>
-            </thead>
-        </table>
-        
+  <h5 class="card-header">Data Mitra</h5>
+  <div class="card-datatable text-nowrap">
+    <table class="datatables-ajax table">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama Institusi</th>
+          <th>Nama Koordinator</th>
+          <th>No Telp</th>
+          <th>Status</th>
+          @if(Auth::user()->role === 'admin')
+          <th>Aksi</th>
+          @endif
+        </tr>
+      </thead>
+    </table>
+  </div>
+</div>
+
+<!-- Modal Konfirmasi Hapus Data -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalTitle">Konfirmasi Hapus Data</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Apakah Anda yakin ingin menghapus data <strong id="modalUserName"></strong> (ID: <span id="modalUserId"></span>)?</p>
+        <p class="text-danger">Data yang sudah dihapus tidak dapat dikembalikan.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-danger" id="btnConfirmDelete">Hapus Data</button>
+      </div>
     </div>
+  </div>
 </div>
 @endsection

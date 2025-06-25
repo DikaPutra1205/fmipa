@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Tambah Data Tenaga Ahli & Teknisi')
+@section('title', 'Tambah Data Mitra')
 
 <!-- Vendor Styles -->
 @section('vendor-style')
@@ -42,16 +42,16 @@
 @endsection
 
 @section('content')
-<!-- Form Tambah Data Tenaga Ahli & Teknisi -->
+<!-- Form Tambah Data Mitra -->
 <div class="col-xl mb-6">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Form Tambah Data Tenaga Ahli & Teknisi</h5>
+            <h5 class="mb-0">Form Tambah Data Mitra</h5>
             <small class="text-muted float-end">Isi data dengan lengkap</small>
         </div>
         <div class="card-body">
-            {{-- Sesuaikan action ke rute yang benar untuk menyimpan user/teknisi --}}
-            <form action="{{ route('users.store') }}" method="POST">
+            {{-- Sesuaikan action ke rute yang benar untuk menyimpan mitra --}}
+            <form action="{{ route('mitra.store') }}" method="POST">
                 @csrf {{-- Token CSRF untuk keamanan --}}
 
                 {{-- Input Nama --}}
@@ -71,23 +71,17 @@
                     <label class="form-label" for="password">Password</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan Password" required />
                 </div>
-
-                {{-- Select Role --}}
+                
+                {{-- Input Nama Institusi --}}
                 <div class="mb-6">
-                    <label class="form-label" for="role">Role</label>
-                    <select id="role" name="role" class="form-select" required>
-                        <option value="" disabled selected>Pilih Role</option>
-                        <option value="teknisi_lab">Teknisi Lab</option>
-                        <option value="tenaga_ahli">Tenaga Ahli</option>
-                        {{-- Tambahkan 'admin' jika memungkinkan untuk dibuat dari sini --}}
-                        {{-- <option value="admin">Admin</option> --}}
-                    </select>
+                    <label class="form-label" for="institution">Nama Institusi</label>
+                    <input type="text" class="form-control" id="institution" name="institution" placeholder="Masukkan Nama Institusi" required />
                 </div>
 
                 {{-- Input Nama Koordinator --}}
                 <div class="mb-6">
-                    <label class="form-label" for="nama_koordinator">Nama Koordinator</label>
-                    <input type="text" class="form-control" id="nama_koordinator" name="coordinator_name" placeholder="Nama Koordinator" />
+                    <label class="form-label" for="coordinator_name">Nama Koordinator</label>
+                    <input type="text" class="form-control" id="coordinator_name" name="coordinator_name" placeholder="Masukkan Alamat Nama Koordinator" required />
                 </div>
 
                 {{-- Input No Telp --}}
@@ -100,7 +94,7 @@
                 {{-- Select Status --}}
                 <div class="mb-6">
                     <label class="form-label" for="status">Status</label>
-                    <select id="status" name="status" class="form-select" required>
+                    <select id="status" name="is_active" class="form-select" required>
                         <option value="" disabled selected>Pilih Status</option>
                         <option value="1">Aktif</option>
                         <option value="0">Tidak Aktif</option>

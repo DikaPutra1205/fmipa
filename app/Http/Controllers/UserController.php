@@ -98,7 +98,7 @@ class UserController extends Controller
             'password' => 'required|string|min:8', // Password minimal 8 karakter
             'role' => 'required|in:teknisi_lab,tenaga_ahli', // Hanya role yang diizinkan
             'coordinator_name' => 'nullable|string|max:255', // 'nullable' jika kolom ini boleh kosong
-            'phone_number' => 'nullable|string|max:20', // 'nullable' jika boleh kosong, sesuaikan panjang max
+            'phone' => 'nullable|string|max:20', // 'nullable' jika boleh kosong, sesuaikan panjang max
             'status' => 'required|boolean', // Harus boolean (1 atau 0)
         ]);
 
@@ -110,7 +110,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password), // <<< PASSWORD DI-HASH DI SINI
             'role' => $request->role,
             'coordinator_name' => $request->coordinator_name,
-            'phone' => $request->phone_number,
+            'phone' => $request->phone,
             'is_active' => $request->status,
             // 'email_verified_at' => now(), // Opsional: jika Anda ingin langsung menandai email terverifikasi
         ]);

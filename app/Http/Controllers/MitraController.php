@@ -68,28 +68,89 @@ class MitraController extends Controller
                 ->make(true);
         }
     }
+    public function create()
+    {
+        return view('mitra.create');
+    }
+    public function store(Request $request)
+    {
+        // Validasi data yang masuk dari form
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email', // Email harus unik di tabel 'users'
+            'password' => 'required|string|min:8', // Password minimal 8 karakter
+            'institution' => 'required|string|max:255',
+            'coordinator_name' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20', // Perhatikan nama input 'phone'
+            'is_active' => 'required|boolean', // Perhatikan nama input 'is_active'
+        ]);
+
+        // Buat user baru di database
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'mitra', // field role default
+            'institution' => $request->institution,
+            'coordinator_name' => $request->coordinator_name,
+            'phone' => $request->phone,
+            'is_active' => $request->is_active,
+        ]);
+        return redirect()->route('mitra.dashboard')->with('success', 'Data Mitra berhasil ditambahkan!');
+    }
+
 
     public function destroy($id)
     {
         // Hanya admin boleh hapus
         if (Auth::user()->role !== 'admin') {
-            abort(403, 'Unauthorized');
+            return response()->json(['success' => false, 'message' => 'Unauthorized. Anda tidak memiliki akses untuk menghapus user.'], 403);
         }
 
         $user = User::findOrFail($id);
         $user->delete();
 
-        return response()->json(['success' => true]);
+        return response()->json(['success' => true, 'message' => 'Data mitra berhasil dihapus.']);
     }
 
     public function edit($id)
     {
-        // Hanya admin boleh akses form edit
+       // Hanya admin boleh hapus
         if (Auth::user()->role !== 'admin') {
-            abort(403, 'Unauthorized');
+            return response()->json(['success' => false, 'message' => 'Unauthorized. Anda tidak memiliki akses untuk menghapus user.'], 403);
         }
 
         $user = User::findOrFail($id);
         return view('mitra.edit', compact('user'));
+    }
+    public function update(Request $request, $id)
+    {
+        // Opsional: Pastikan hanya admin yang bisa mengakses ini
+        // if (Auth::user()->role !== 'admin') {
+        //     abort(403, 'Unauthorized.');
+        // }
+
+        $user = User::findOrFail($id); // Temukan user yang akan diupdate
+
+        // Validasi data yang masuk
+        $request->validate([
+            'institution' => 'required|string|max:255',
+            'coordinator_name' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20', // Perhatikan nama input 'phone'
+            'is_active' => 'required|boolean', // Perhatikan nama input 'is_active'
+        ]);
+
+        // Update data user
+        $user->institution = $request->institution;
+        $user->coordinator_name = $request->coordinator_name;
+        $user->phone = $request->phone; // Menggunakan 'phone' sesuai input name
+        $user->is_active = $request->is_active; // Menggunakan 'is_active' sesuai input name
+        $user->role = 'mitra';
+
+
+        $user->save(); // Simpan perubahan
+
+        // Redirect ke halaman dashboard dengan pesan sukses
+        return redirect()->route('mitra.dashboard')->with('success', 'Data mitra berhasil diperbarui!');
     }
 }

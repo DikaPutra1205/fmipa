@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+//teknisi
 Route::middleware(['auth'])->group(function () {
     Route::get('/teknisi', function () {
         return view('teknisi.dashboard');
@@ -48,11 +49,12 @@ Route::middleware(['auth'])->group(function () {
     })->name('mitra.dashboard');
 
     Route::get('/mitra/data', [MitraController::class, 'getData'])->name('mitra.data');
-
-    Route::middleware('can:isAdmin')->group(function () {
-        Route::get('/mitra/{id}/edit', [MitraController::class, 'edit']);
-        Route::delete('/mitra/{id}', [MitraController::class, 'destroy']);
-    });
+    
+    Route::get('/mitra/create', [MitraController::class, 'create'])->name('mitra.create');
+    Route::post('/mitra', [MitraController::class, 'store'])->name('mitra.store');
+    Route::get('/mitra/{id}/edit', [MitraController::class, 'edit'])->name('mitra.edit');
+    Route::put('/mitra/{id}', [MitraController::class, 'update'])->name('mitra.update');
+    Route::delete('/mitra/{id}', [MitraController::class, 'destroy'])->name('mitra.destroy');
 });
 
 require __DIR__ . '/auth.php';
