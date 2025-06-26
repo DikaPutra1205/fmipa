@@ -57,6 +57,7 @@ use Illuminate\Support\Facades\Auth;
           <th>No</th>
           <th>Nama Institusi</th>
           <th>Nama Koordinator</th>
+          <th>Email</th>
           <th>No Telp</th>
           <th>Status</th>
           @if(Auth::user()->role === 'admin')

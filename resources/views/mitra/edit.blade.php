@@ -50,41 +50,36 @@
         </div>
         <div class="card-body">
             {{-- Form action mengarah ke rute update dengan ID user --}}
-            <form action="{{ route('teknisi.update', $user->id) }}" method="POST">
+            <form action="{{ route('mitra.update', $user->id) }}" method="POST">
                 @csrf {{-- Token CSRF untuk keamanan --}}
                 @method('PUT') {{-- Metode HTTP PUT untuk update --}}
 
-                {{-- Input Nama Koordinator --}}
+                {{-- Input Nama Institusi--}}
                 <div class="mb-6">
-                    <label class="form-label" for="nama">Nama Koordinator</label>
-                    <input type="text" class="form-control" id="coordinator_name" name="coordinator_name"
-                           placeholder="Masukkan Nama Lengkap" value="{{ old('coordinator_name', $user->coordinator_name) }}" required />
+                    <label class="form-label" for="nama">Nama Institusi</label>
+                    <input type="text" class="form-control" id="institution" name="institution"
+                           placeholder="Masukkan Nama Institusi" value="{{ old('institution', $user->institution) }}" required />
                     @error('name')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
-                {{-- Select Role --}}
+                {{-- Input Nama Koordinator --}}
                 <div class="mb-6">
-                    <label class="form-label" for="role" readonly>Role</label>
-                    <select id="role" name="role" class="form-select" required>
-                        <option value="" disabled>Pilih Role</option>
-                        <option value="teknisi_lab" {{ old('role', $user->role) == 'teknisi_lab' ? 'selected' : '' }}>Teknisi Lab</option>
-                        <option value="tenaga_ahli" {{ old('role', $user->role) == 'tenaga_ahli' ? 'selected' : '' }}>Tenaga Ahli</option>
-                        {{-- Tambahkan 'admin' jika memungkinkan untuk diedit dari sini --}}
-                        <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
-                    </select>
-                    @error('role')
+                    <label class="form-label" for="nama">Nama Koordinator</label>
+                    <input type="text" class="form-control" id="name" name="name"
+                           placeholder="Masukkan Nama Koordinator" value="{{ old('name', $user->name) }}" required />
+                    @error('name')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
 
-                {{-- Input Nama Koordinator --}}
+                {{-- Input Email --}}
                 <div class="mb-6">
-                    <label class="form-label" for="nama_koordinator">Nama Koordinator</label>
-                    <input type="text" class="form-control" id="nama_koordinator" name="coordinator_name"
-                           placeholder="Nama Koordinator" value="{{ old('coordinator_name', $user->coordinator_name) }}" />
-                    @error('coordinator_name')
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email"
+                           placeholder="Masukkan Alamat Email" value="{{ old('email', $user->email) }}" required />
+                    @error('email')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 
 class MitraController extends Controller
@@ -24,7 +25,7 @@ class MitraController extends Controller
         }
 
         // Ambil kolom yang dibutuhkan
-        $data->select(['id','institution', 'coordinator_name', 'phone','is_active']);
+        $data->select(['id','institution', 'name', 'email','phone','is_active']);
 
         // Jika admin, tambahkan kolom aksi
         if ($user->role === 'admin') {
@@ -76,23 +77,21 @@ class MitraController extends Controller
     {
         // Validasi data yang masuk dari form
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email', // Email harus unik di tabel 'users'
-            'password' => 'required|string|min:8', // Password minimal 8 karakter
             'institution' => 'required|string|max:255',
-            'coordinator_name' => 'nullable|string|max:255',
+            'name' => 'nullable|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email', // Email harus unik di tabel 'users'
+            'password' => 'required|string|min:8',
             'phone' => 'nullable|string|max:20', // Perhatikan nama input 'phone'
             'is_active' => 'required|boolean', // Perhatikan nama input 'is_active'
         ]);
 
         // Buat user baru di database
         User::create([
+            'institution' => $request->institution,
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => 'mitra', // field role default
-            'institution' => $request->institution,
-            'coordinator_name' => $request->coordinator_name,
             'phone' => $request->phone,
             'is_active' => $request->is_active,
         ]);
@@ -135,20 +134,22 @@ class MitraController extends Controller
         // Validasi data yang masuk
         $request->validate([
             'institution' => 'required|string|max:255',
-            'coordinator_name' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:20', // Perhatikan nama input 'phone'
-            'is_active' => 'required|boolean', // Perhatikan nama input 'is_active'
+            'name' => 'nullable|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id, 
+            'phone' => 'nullable|string|max:20',
+            'is_active' => 'required|boolean',
         ]);
 
         // Update data user
         $user->institution = $request->institution;
-        $user->coordinator_name = $request->coordinator_name;
-        $user->phone = $request->phone; // Menggunakan 'phone' sesuai input name
-        $user->is_active = $request->is_active; // Menggunakan 'is_active' sesuai input name
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->is_active = $request->is_active;
         $user->role = 'mitra';
 
 
-        $user->save(); // Simpan perubahan
+        $user->save();
 
         // Redirect ke halaman dashboard dengan pesan sukses
         return redirect()->route('mitra.dashboard')->with('success', 'Data mitra berhasil diperbarui!');

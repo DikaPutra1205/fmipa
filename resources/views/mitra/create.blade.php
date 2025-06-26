@@ -54,12 +54,18 @@
             <form action="{{ route('mitra.store') }}" method="POST">
                 @csrf {{-- Token CSRF untuk keamanan --}}
 
-                {{-- Input Nama --}}
+                {{-- Input Nama Institusi --}}
                 <div class="mb-6">
-                    <label class="form-label" for="nama">Nama Lengkap</label>
-                    <input type="text" class="form-control" id="nama" name="name" placeholder="Masukkan Nama Lengkap" required />
+                    <label class="form-label" for="institution">Nama Institusi</label>
+                    <input type="text" class="form-control" id="institution" name="institution" placeholder="Masukkan Nama Institusi" required />
                 </div>
 
+                {{-- Input Nama Koordinator --}}
+                <div class="mb-6">
+                    <label class="form-label" for="nama">Nama Koordinator</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Masukkan Nama Lengkap" required />
+                </div>
+    
                 {{-- Input Email --}}
                 <div class="mb-6">
                     <label class="form-label" for="email">Email</label>
@@ -70,18 +76,6 @@
                 <div class="mb-6">
                     <label class="form-label" for="password">Password</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan Password" required />
-                </div>
-                
-                {{-- Input Nama Institusi --}}
-                <div class="mb-6">
-                    <label class="form-label" for="institution">Nama Institusi</label>
-                    <input type="text" class="form-control" id="institution" name="institution" placeholder="Masukkan Nama Institusi" required />
-                </div>
-
-                {{-- Input Nama Koordinator --}}
-                <div class="mb-6">
-                    <label class="form-label" for="coordinator_name">Nama Koordinator</label>
-                    <input type="text" class="form-control" id="coordinator_name" name="coordinator_name" placeholder="Masukkan Alamat Nama Koordinator" required />
                 </div>
 
                 {{-- Input No Telp --}}
