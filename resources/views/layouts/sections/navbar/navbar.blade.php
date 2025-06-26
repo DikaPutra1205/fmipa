@@ -16,26 +16,26 @@ $navbarDetached = ($navbarDetached ?? '');
 
       <!--  Brand demo (display only for navbar-full and hide on below xl) -->
       @if(isset($navbarFull))
-        <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
-          <a href="{{url('/')}}" class="app-brand-link">
-            <span class="app-brand-logo demo">@include('_partials.macros',["height"=>20])</span>
-            <span class="app-brand-text demo menu-text fw-bold">{{config('variables.templateName')}}</span>
-          </a>
-          @if(isset($menuHorizontal))
-            <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
-              <i class="ti ti-x ti-md align-middle"></i>
-            </a>
-          @endif
-        </div>
+      <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
+        <a href="{{url('/')}}" class="app-brand-link">
+          <span class="app-brand-logo demo">@include('_partials.macros',["height"=>20])</span>
+          <span class="app-brand-text demo menu-text fw-bold">{{config('variables.templateName')}}</span>
+        </a>
+        @if(isset($menuHorizontal))
+        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
+          <i class="ti ti-x ti-md align-middle"></i>
+        </a>
+        @endif
+      </div>
       @endif
 
       <!-- ! Not required for layout-without-menu -->
       @if(!isset($navbarHideToggle))
-        <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0{{ isset($menuHorizontal) ? ' d-xl-none ' : '' }} {{ isset($contentNavbar) ?' d-xl-none ' : '' }}">
-          <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
-            <i class="ti ti-menu-2 ti-md"></i>
-          </a>
-        </div>
+      <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0{{ isset($menuHorizontal) ? ' d-xl-none ' : '' }} {{ isset($contentNavbar) ?' d-xl-none ' : '' }}">
+        <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+          <i class="ti ti-menu-2 ti-md"></i>
+        </a>
+      </div>
       @endif
 
       <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
@@ -53,42 +53,42 @@ $navbarDetached = ($navbarDetached ?? '');
         <!-- /Search -->
         @endif
 
-       <ul class="navbar-nav flex-row align-items-center ms-auto">
+        <ul class="navbar-nav flex-row align-items-center ms-auto">
           @if(isset($menuHorizontal))
-            <!-- Search -->
-            <li class="nav-item navbar-search-wrapper">
-              <a class="nav-link btn btn-text-secondary btn-icon rounded-pill search-toggler" href="javascript:void(0);">
-                <i class="ti ti-search ti-md"></i>
-              </a>
-            </li>
-            <!-- /Search -->
+          <!-- Search -->
+          <li class="nav-item navbar-search-wrapper">
+            <a class="nav-link btn btn-text-secondary btn-icon rounded-pill search-toggler" href="javascript:void(0);">
+              <i class="ti ti-search ti-md"></i>
+            </a>
+          </li>
+          <!-- /Search -->
           @endif
 
           @if($configData['hasCustomizer'] == true)
-            <!-- Style Switcher -->
-            <li class="nav-item dropdown-style-switcher dropdown">
-              <a class="nav-link btn btn-text-secondary btn-icon rounded-pill dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                <i class='ti ti-md'></i>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-styles">
-                <li>
-                  <a class="dropdown-item" href="javascript:void(0);" data-theme="light">
-                    <span class="align-middle"><i class='ti ti-sun ti-md me-3'></i>Light</span>
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="javascript:void(0);" data-theme="dark">
-                    <span class="align-middle"><i class="ti ti-moon-stars ti-md me-3"></i>Dark</span>
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="javascript:void(0);" data-theme="system">
-                    <span class="align-middle"><i class="ti ti-device-desktop-analytics ti-md me-3"></i>System</span>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <!-- / Style Switcher -->
+          <!-- Style Switcher -->
+          <li class="nav-item dropdown-style-switcher dropdown">
+            <a class="nav-link btn btn-text-secondary btn-icon rounded-pill dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+              <i class='ti ti-md'></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-styles">
+              <li>
+                <a class="dropdown-item" href="javascript:void(0);" data-theme="light">
+                  <span class="align-middle"><i class='ti ti-sun ti-md me-3'></i>Light</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="javascript:void(0);" data-theme="dark">
+                  <span class="align-middle"><i class="ti ti-moon-stars ti-md me-3"></i>Dark</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="javascript:void(0);" data-theme="system">
+                  <span class="align-middle"><i class="ti ti-device-desktop-analytics ti-md me-3"></i>System</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- / Style Switcher -->
           @endif
 
           <!-- User -->
@@ -110,9 +110,13 @@ $navbarDetached = ($navbarDetached ?? '');
                     <div class="flex-grow-1">
                       <h6 class="mb-0">
                         @if (Auth::check())
-                          {{ Auth::user()->name }}
+                        @if(Auth::user()->role == 'mitra')
+                        {{ Auth::user()->coordinator_name }}
                         @else
-                          User
+                        {{ Auth::user()->name }}
+                        @endif
+                        @else
+                        User
                         @endif
                       </h6>
                     </div>
@@ -131,26 +135,26 @@ $navbarDetached = ($navbarDetached ?? '');
                 <div class="dropdown-divider my-1 mx-n2"></div>
               </li>
               @if (Auth::check())
-                <li>
-                  <div class="d-grid px-2 pt-2 pb-1">
-                    <a class="btn btn-sm btn-danger d-flex" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                      <small class="align-middle">Logout</small>
-                      <i class="ti ti-logout ms-2 ti-14px"></i>
-                    </a>
-                  </div>
-                </li>
-                <form method="POST" id="logout-form" action="{{ route('logout') }}">
-                  @csrf
-                </form>
+              <li>
+                <div class="d-grid px-2 pt-2 pb-1">
+                  <a class="btn btn-sm btn-danger d-flex" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <small class="align-middle">Logout</small>
+                    <i class="ti ti-logout ms-2 ti-14px"></i>
+                  </a>
+                </div>
+              </li>
+              <form method="POST" id="logout-form" action="{{ route('logout') }}">
+                @csrf
+              </form>
               @else
-                <li>
-                  <div class="d-grid px-2 pt-2 pb-1">
-                    <a class="btn btn-sm btn-danger d-flex" href="{{ Route::has('login') ? route('login') : url('auth/login') }}">
-                      <small class="align-middle">Login</small>
-                      <i class="ti ti-login ms-2 ti-14px"></i>
-                    </a>
-                  </div>
-                </li>
+              <li>
+                <div class="d-grid px-2 pt-2 pb-1">
+                  <a class="btn btn-sm btn-danger d-flex" href="{{ Route::has('login') ? route('login') : url('auth/login') }}">
+                    <small class="align-middle">Login</small>
+                    <i class="ti ti-login ms-2 ti-14px"></i>
+                  </a>
+                </div>
+              </li>
               @endif
             </ul>
           </li>
