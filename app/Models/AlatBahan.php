@@ -11,7 +11,7 @@ class AlatBahan extends Model
 
     protected $table = 'alat_bahans'; // Pastikan nama tabelnya benar
     protected $fillable = [
-        'nama_alat_bbahan',
+        'nama_alat_bahan',
         'kondisi_alat',
         'jumlah_alat',
         'status_data'

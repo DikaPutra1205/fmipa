@@ -84,6 +84,17 @@
                     @enderror
                 </div>
 
+                {{-- Input Password (Opsional: hanya diisi jika ingin mengubah password) --}}
+                {{-- Disarankan untuk memiliki field konfirmasi password jika diaktifkan --}}
+                <div class="mb-6">
+                    <label class="form-label" for="password">Password (Biarkan kosong jika tidak ingin mengubah)</label>
+                    <input type="password" class="form-control" id="password" name="password"
+                           placeholder="Masukkan Password Baru" />
+                    @error('password')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 {{-- Input No Telp --}}
                 <div class="mb-6">
                     <label class="form-label" for="no_telp">No. Telepon</label>

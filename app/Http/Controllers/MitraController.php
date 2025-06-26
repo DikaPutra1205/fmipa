@@ -136,6 +136,7 @@ class MitraController extends Controller
             'institution' => 'required|string|max:255',
             'name' => 'nullable|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id, 
+            'password' => 'nullable|string|min:8', // Password opsional saat edit
             'phone' => 'nullable|string|max:20',
             'is_active' => 'required|boolean',
         ]);
@@ -148,6 +149,9 @@ class MitraController extends Controller
         $user->is_active = $request->is_active;
         $user->role = 'mitra';
 
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
 
         $user->save();
 

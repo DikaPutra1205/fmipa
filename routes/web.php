@@ -49,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
     })->name('mitra.dashboard');
 
     Route::get('/mitra/data', [MitraController::class, 'getData'])->name('mitra.data');
-    
+
     Route::get('/mitra/create', [MitraController::class, 'create'])->name('mitra.create');
     Route::post('/mitra', [MitraController::class, 'store'])->name('mitra.store');
     Route::get('/mitra/{id}/edit', [MitraController::class, 'edit'])->name('mitra.edit');
@@ -68,10 +68,20 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/alat-bahan/data', [AlatBahanController::class, 'getData'])->name('alat_bahan.data');
 
     // Rute untuk Admin (jika ada edit/delete untuk alat & bahan)
-    Route::middleware('can:isAdmin')->group(function () {
-        Route::get('/alat-bahan/{id}/edit', [AlatBahanController::class, 'edit'])->name('alat_bahan.edit');
-        Route::delete('/alat-bahan/{id}', [AlatBahanController::class, 'destroy'])->name('alat_bahan.destroy');
-    });
+    Route::get('/alat-bahan/create', [AlatBahanController::class, 'create'])->name('alat_bahan.create');
+
+    // Rute untuk menyimpan data baru Alat & Bahan dari form (POST request)
+    Route::post('/alat-bahan', [AlatBahanController::class, 'store'])->name('alat_bahan.store');
+
+    // Rute untuk menampilkan form edit Alat & Bahan tertentu
+    // {id} adalah parameter untuk ID Alat & Bahan yang akan diedit
+    Route::get('/alat-bahan/{id}/edit', [AlatBahanController::class, 'edit'])->name('alat_bahan.edit');
+
+    // Rute untuk menyimpan perubahan (update) data Alat & Bahan tertentu (PUT/PATCH request)
+    Route::put('/alat-bahan/{id}', [AlatBahanController::class, 'update'])->name('alat_bahan.update');
+
+    // Rute untuk menghapus data Alat & Bahan tertentu (DELETE request)
+    Route::delete('/alat-bahan/{id}', [AlatBahanController::class, 'destroy'])->name('alat_bahan.destroy');
 });
 
 //Sample Material
@@ -83,8 +93,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/sample-material/data', [SampelMaterialController::class, 'getData'])->name('sample_material.data');
 
     // Rute untuk Admin (jika ada edit/delete untuk Sample Material)
-    Route::middleware('can:isAdmin')->group(function () {
-        Route::get('/sample-material/{id}/edit', [SampelMaterialController::class, 'edit'])->name('sample_material.edit');
-        Route::delete('/sample-material/{id}', [SampelMaterialController::class, 'destroy'])->name('sample_material.destroy');
-    });
+    Route::get('/sample-material/create', [SampelMaterialController::class, 'create'])->name('sample_material.create');
+
+    // Rute untuk menyimpan data baru Sampel & Material dari form (POST request)
+    Route::post('/sample-material', [SampelMaterialController::class, 'store'])->name('sample_material.store');
+
+    // Rute untuk menampilkan form edit Sampel & Material tertentu
+    // {id} adalah parameter untuk ID Sampel & Material yang akan diedit
+    Route::get('/sample-material/{id}/edit', [SampelMaterialController::class, 'edit'])->name('sample_material.edit');
+
+    // Rute untuk menyimpan perubahan (update) data Sampel & Material tertentu (PUT/PATCH request)
+    Route::put('/sample-material/{id}', [SampelMaterialController::class, 'update'])->name('sample_material.update');
+
+    // Rute untuk menghapus data Sampel & Material tertentu (DELETE request)
+    Route::delete('/sample-material/{id}', [SampelMaterialController::class, 'destroy'])->name('sample_material.destroy');
 });

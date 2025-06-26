@@ -1,6 +1,10 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Data TA & Teknisi')
+@php
+use Illuminate\Support\Facades\Auth;
+@endphp
+
+@section('title', 'Data Sampel & Material')
 
 @section('vendor-style')
 @vite([
@@ -20,79 +24,71 @@
 @endsection
 
 @section('page-script')
-@vite(['resources/assets/js/table-data-sampel-material.js'])
+<script>
+  // Definisi userRole untuk JavaScript
+  window.userRole = "{{ Auth::user()->role ?? '' }}";
+
+  // Definisi rute yang akan digunakan di JavaScript (penting untuk AJAX dan link)
+  window.routes = {
+      getSampelMaterialData: "{{ route('sample_material.data') }}",
+      createSampelMaterial: "{{ route('sample_material.create') }}",
+      editSampelMaterial: "{{ route('sample_material.edit', '') }}",
+      deleteSampelMaterial: "{{ route('sample_material.destroy', '') }}",
+      csrfToken: "{{ csrf_token() }}" // CSRF token untuk permintaan AJAX DELETE
+  };
+</script>
+@vite(['resources/assets/js/table-data-sample-material.js'])
 @endsection
 
 @section('content')
-@php
-    use Illuminate\Support\Facades\Auth;
-@endphp
 
-{{-- Definisi userRole untuk JavaScript --}}
-<script>
-    window.userRole = "{{ Auth::user()->role ?? '' }}"; // Pastikan userRole tersedia
-</script>
+{{-- Button Tambah Data Sampel & Material --}}
+<div class="demo-inline-spacing mb-3">
+  <a href="{{ route('sample_material.create') }}" class="btn btn-primary waves-effect waves-light">
+    <span class="ti-xs ti ti-plus me-2"></span> Tambah Data Sampel & Material
+  </a>
+</div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.datatables-ajax').forEach(function(table) {
-      table.addEventListener('click', function (e) {
-        const btn = e.target.closest('.btn-delete-user');
-        if (!btn) return;
-  
-        const userId = btn.getAttribute('data-id');
-        if (!userId) return;
-  
-        if (confirm('Yakin ingin menghapus data ini?')) {
-          fetch('/user/' + userId, {
-            method: 'DELETE',
-            headers: {
-              'X-CSRF-TOKEN': '{{ csrf_token() }}',
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
-          })
-          .then(res => {
-            if (!res.ok) throw new Error('Gagal hapus data sampel & material');
-            return res.json();
-          })
-          .then(() => {
-            alert('User berhasil dihapus');
-            // Reload datatables pakai instance
-            if (window.userTable) {
-              window.userTable.ajax.reload();
-            } else {
-              location.reload(); // fallback
-            }
-          })
-          .catch(() => {
-            alert('Gagal menghapus data sampel & material');
-          });
-        }
-      });
-    });
-  });
-  </script>
-  
+{{-- Card Data Sampel & Material --}}
 <div class="card">
-    <h5 class="card-header">Data Sampel & Material</h5>
-    <div class="card-datatable text-nowrap">
-        <table class="datatables-ajax table">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama Sampel & Material</th>
-                    <th>Jumlah Sampel</th>
-                    <th>Tanggal Penerimaaan</th>
-                    <th>Tanggal Pengembalian</th>
-                    <th>Status</th>
-                    @if(Auth::user()->role === 'admin')
-                        <th>Aksi</th>
-                    @endif
-                </tr>
-            </thead>
-        </table>
-        
+  <h5 class="card-header">Data Sampel & Material</h5>
+  <div class="card-datatable text-nowrap">
+    <table class="datatables-ajax table">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama Sampel & Material</th>
+          <th>Jumlah Sampel</th>
+          <th>Tanggal Penerimaan</th>
+          <th>Tanggal Pengembalian</th>
+          <th>Status</th>
+          @if(Auth::user()->role === 'admin')
+            <th>Aksi</th>
+          @endif
+        </tr>
+      </thead>
+    </table>
+  </div>
+</div>
+
+<!-- Modal Konfirmasi Hapus Data Sampel & Material -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalTitle">Konfirmasi Hapus Data Sampel & Material</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {{-- Konten ini akan diisi secara dinamis oleh JavaScript --}}
+        <p>Apakah Anda yakin ingin menghapus data <strong id="modalSampleName"></strong> (ID: <span id="modalSampleId"></span>)?</p>
+        <p class="text-danger">Data yang sudah dihapus tidak dapat dikembalikan.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-danger" id="btnConfirmDelete">Hapus Data</button>
+      </div>
     </div>
+  </div>
 </div>
 @endsection
