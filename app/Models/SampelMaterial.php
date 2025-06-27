@@ -22,6 +22,7 @@ class SampelMaterial extends Model
 
     /**
      * The attributes that are mass assignable.
+     * [PERBAIKAN] Array ini seharusnya hanya berisi nama kolom.
      *
      * @var array<int, string>
      */
@@ -30,8 +31,16 @@ class SampelMaterial extends Model
         'status',
         'nama_sampel_material',
         'jumlah_sampel',
+        'tanggal_penerimaan',
+        'tanggal_pengembalian',
     ];
 
+    /**
+     * The attributes that should be cast.
+     * Penempatan casting di sini sudah benar.
+     *
+     * @var array
+     */
     protected $casts = [
         'tanggal_penerimaan' => 'datetime',
         'tanggal_pengembalian' => 'datetime',

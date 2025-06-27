@@ -10,11 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests; // [PERBAIKAN] Import trait yang diperlukan
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class SampelMaterialController extends Controller
 {
-    use AuthorizesRequests; // [PERBAIKAN] Gunakan trait di dalam class
+    use AuthorizesRequests;
 
     /**
      * Menampilkan halaman dashboard untuk monitoring semua sampel.
@@ -114,18 +114,21 @@ class SampelMaterialController extends Controller
     /**
      * Menampilkan form untuk mengedit Sampel Material tertentu.
      */
-    public function edit(SampelMaterial $sampelMaterial): View
+    public function edit($id): View
     {
         $this->authorize('admin');
+        $sampelMaterial = SampelMaterial::findOrFail($id);
         return view('sample_material.edit', compact('sampelMaterial'));
     }
 
     /**
      * Menyimpan perubahan (update) pada Sampel Material.
      */
-    public function update(Request $request, SampelMaterial $sampelMaterial)
+    public function update(Request $request, $id)
     {
         $this->authorize('admin');
+
+        $sampelMaterial = SampelMaterial::findOrFail($id);
 
         $request->validate([
             'nama_sampel_material' => 'required|string|max:255',
@@ -143,9 +146,12 @@ class SampelMaterialController extends Controller
     /**
      * Menghapus data Sampel Material.
      */
-    public function destroy(SampelMaterial $sampelMaterial)
+    public function destroy($id)
     {
         $this->authorize('admin');
+        
+        $sampelMaterial = SampelMaterial::findOrFail($id);
+        
         $sampelMaterial->delete();
         return response()->json(['success' => true, 'message' => 'Data sampel berhasil dihapus.']);
     }

@@ -86,12 +86,14 @@
             
             <div class="mb-3">
                 <label class="form-label" for="tanggal_penerimaan">Tanggal Penerimaan</label>
-                <input type="date" class="form-control" name="tanggal_penerimaan" value="{{ old('tanggal_penerimaan', $sampelMaterial->tanggal_penerimaan ? $sampelMaterial->tanggal_penerimaan->format('Y-m-d') : '') }}" />
+                {{-- [PERBAIKAN] Menggunakan type="text" dan format value yang benar --}}
+                <input type="text" class="form-control" id="tanggal_penerimaan" name="tanggal_penerimaan" value="{{ old('tanggal_penerimaan', $sampelMaterial->tanggal_penerimaan ? $sampelMaterial->tanggal_penerimaan->format('Y-m-d') : '') }}" placeholder="Pilih Tanggal" />
             </div>
 
             <div class="mb-3">
                 <label class="form-label" for="tanggal_pengembalian">Tanggal Pengembalian (Opsional)</label>
-                <input type="text" class="form-control" id="tanggal_pengembalian" name="tanggal_pengembalian" value="{{ old('tanggal_pengembalian', $sampelMaterial->tanggal_pengembalian) }}" />
+                {{-- [PERBAIKAN] Menggunakan type="text" dan format value yang benar --}}
+                <input type="text" class="form-control" id="tanggal_pengembalian" name="tanggal_pengembalian" value="{{ old('tanggal_pengembalian', $sampelMaterial->tanggal_pengembalian ? $sampelMaterial->tanggal_pengembalian->format('Y-m-d') : '') }}" placeholder="Pilih Tanggal" />
             </div>
 
             <button type="submit" class="btn btn-primary">Simpan Perubahan</button>

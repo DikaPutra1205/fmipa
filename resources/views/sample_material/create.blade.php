@@ -82,7 +82,8 @@
             </div>
             <div class="mb-3">
                 <label class="form-label" for="tanggal_penerimaan">Tanggal Penerimaan (Opsional)</label>
-                <input type="date" class="form-control" name="tanggal_penerimaan" value="{{ old('tanggal_penerimaan') }}" />
+                {{-- [PERBAIKAN] Menggunakan type="text" untuk Flatpickr --}}
+                <input type="text" class="form-control" id="tanggal_penerimaan" name="tanggal_penerimaan" value="{{ old('tanggal_penerimaan') }}" placeholder="Pilih Tanggal" />
             </div>
 
             <button type="submit" class="btn btn-primary">Simpan Sampel</button>
