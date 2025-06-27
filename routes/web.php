@@ -6,8 +6,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\MitraController;
 use App\Http\Controllers\AlatBahanController;
 use App\Http\Controllers\SampelMaterialController;
+use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\TestPackageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
+use App\Models\TestPackage;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -107,4 +110,34 @@ Route::middleware(['auth'])->group(function () {
 
     // Rute untuk menghapus data Sampel & Material tertentu (DELETE request)
     Route::delete('/sample-material/{id}', [SampelMaterialController::class, 'destroy'])->name('sample_material.destroy');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/module', function () {
+        return view('module.dashboard');
+    })->name('module.dashboard');
+
+    Route::get('/module/data', [ModuleController::class, 'getData'])->name('module.data');
+
+    Route::get('/module/create', [ModuleController::class, 'create'])->name('module.create');
+    Route::post('/module', [ModuleController::class, 'store'])->name('module.store');
+
+    Route::get('/module/{id}/edit', [ModuleController::class, 'edit'])->name('module.edit');
+    Route::put('/module/{id}', [ModuleController::class, 'update'])->name('module.update');
+
+    Route::delete('/module/{id}', [ModuleController::class, 'destroy'])->name('module.destroy');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/test_package', function () {
+        return view('test_package.dashboard');
+    })->name('test_package.dashboard');
+
+    Route::get('/test_package/data', [TestPackageController::class, 'getData'])->name('test_package.data');
+
+    Route::get('/test_package/create', [TestPackageController::class, 'create'])->name('test_package.create');
+    Route::post('/test_package', [TestPackageController::class, 'store'])->name('test_package.store');
+    Route::get('/test_package/{id}/edit', [TestPackageController::class, 'edit'])->name('test_package.edit');
+    Route::put('/test_package/{id}', [TestPackageController::class, 'update'])->name('test_package.update');
+    Route::delete('/test_package/{id}', [TestPackageController::class, 'destroy'])->name('test_package.destroy');
 });

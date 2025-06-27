@@ -12,8 +12,6 @@ class SampelMaterialController extends Controller
     // Method untuk menampilkan view halaman sampel dan material
     public function index()
     {
-        // Mengembalikan view untuk dashboard Sampel & Material.
-        // Pastikan Anda memiliki file Blade di resources/views/sample_material/dashboard.blade.php
         return view('sample_material.dashboard');
     }
 
@@ -50,7 +48,7 @@ class SampelMaterialController extends Controller
                         <button type="button" class="btn btn-sm btn-icon btn-danger btn-delete-sample-material"
                                 data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal"
                                 data-id="' . $row->id . '"
-                                data-sample-name="' . htmlspecialchars($row->nama_sampel_material) . '" title="Hapus">
+                                data-sample-name="' . htmlspecialchars($row->nama_module) . '" title="Hapus">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                 <path d="M4 7l16 0" />
@@ -68,44 +66,27 @@ class SampelMaterialController extends Controller
             ->make(true);
     }
 
-    /**
-     * Menampilkan form untuk membuat Sampel Material baru.
-     * Rute: GET /sample-material/create
-     *
-     * @return \Illuminate\View\View
-     */
     public function create()
     {
+       
         return view('sample_material.create');
     }
 
-    /**
-     * Menyimpan Sampel Material yang baru dibuat ke database.
-     * Rute: POST /sample-material
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
+
     public function store(Request $request)
     {
+        
         $request->validate([
-            'nama_sampel_material' => 'required|string|max:255',
-            'jumlah_sampel' => 'required|integer|min:0',
-            'tanggal_penerimaan' => 'required|date',
-            'tanggal_pengembalian' => 'nullable|date|after_or_equal:tanggal_penerimaan',
-            'status_data' => 'required|boolean',
+            'code' => 'required|string|min:10',
+            'name' => 'required|string|max:255',
+            'text' => 'required|text',
         ]);
+
         SampelMaterial::create($request->all());
         return redirect()->route('sample_material.dashboard')->with('success', 'Data sampel & material berhasil ditambahkan!');
     }
 
-    /**
-     * Menampilkan form untuk mengedit Sampel Material tertentu.
-     * Rute: GET /sample-material/{id}/edit
-     *
-     * @param  int  $id
-     * @return \Illuminate\View\View
-     */
+
     public function edit($id)
     {
         // Memastikan hanya 'admin' yang bisa mengakses fungsi edit.
@@ -113,22 +94,11 @@ class SampelMaterialController extends Controller
             abort(403, 'Unauthorized. Anda tidak memiliki akses untuk mengedit data ini.');
         }
 
-        // Mencari data SampelMaterial berdasarkan ID atau menampilkan error 404 jika tidak ditemukan.
         $sampelMaterial = SampelMaterial::findOrFail($id);
 
-        // Mengembalikan view untuk form edit, melewatkan objek $sampelMaterial ke view.
-        // Pastikan Anda memiliki file Blade di resources/views/sample_material/edit.blade.php
         return view('sample_material.edit', compact('sampelMaterial'));
     }
 
-    /**
-     * Menyimpan perubahan (update) pada Sampel Material yang spesifik di database.
-     * Rute: PUT /sample-material/{id}
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function update(Request $request, $id)
     {
         // Memastikan hanya 'admin' yang bisa mengakses fungsi update.
@@ -141,11 +111,9 @@ class SampelMaterialController extends Controller
 
         // Memvalidasi data yang masuk dari form update.
         $request->validate([
-            'nama_sampel_material' => 'required|string|max:255',
-            'jumlah_sampel' => 'required|integer|min:0',
-            'tanggal_penerimaan' => 'required|date',
-            'tanggal_pengembalian' => 'nullable|date|after_or_equal:tanggal_penerimaan',
-            'status_data' => 'required|boolean',
+            'code' => 'required|string|min:10',
+            'name' => 'required|string|max:255',
+            'text' => 'required|text',
         ]);
 
         // Memperbarui record di database dengan data baru dari request.
@@ -155,13 +123,7 @@ class SampelMaterialController extends Controller
         return redirect()->route('sample_material.dashboard')->with('success', 'Data sampel & material berhasil diperbarui!');
     }
 
-    /**
-     * Menghapus data Sampel Material tertentu dari database.
-     * Rute: DELETE /sample-material/{id}
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function destroy($id)
     {
         // Memastikan hanya 'admin' yang bisa mengakses fungsi hapus.

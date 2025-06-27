@@ -11,9 +11,12 @@ class TestPackage extends Model
 
     protected $fillable = ['module_id', 'name', 'price'];
 
-    public function module()    
+    protected $casts = [
+        'price' => 'float',
+    ];
+    public function module()
     {
-        return $this->belongsTo(Module::class);
+        return $this->belongsTo(Module::class, 'module_id', 'id');
     }
 
     public function tests()
