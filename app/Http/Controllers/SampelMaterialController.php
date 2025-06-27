@@ -37,11 +37,11 @@ class SampelMaterialController extends Controller
             ->addIndexColumn()
             ->addColumn('test_id', function ($row) {
                 // Menampilkan ID order terkait
-                return $row->test ? '#' . $row->test->id : '-';
+                return $row->getFormattedTestId();
             })
             ->addColumn('mitra_name', function ($row) {
                 // Menampilkan nama mitra pemilik order
-                return $row->test->mitra->name ?? 'Manual Input';
+                return $row->getFormattedMitraName();
             })
             ->editColumn('status', function ($row) {
                 // Memberi warna pada status sampel

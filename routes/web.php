@@ -11,6 +11,7 @@ use App\Http\Controllers\WizardDispatcherController;
 use App\Http\Controllers\SubmissionWizardController;
 use App\Http\Controllers\TestingTrackerController;
 use App\Http\Controllers\PaymentWizardController;
+use App\Http\Controllers\HasilUjiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Auth;
@@ -163,4 +164,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/{test}/complete', [PaymentWizardController::class, 'completeOrder'])->name('complete');
     });
 
+    Route::prefix('hasil-uji')->name('hasil_uji.')->group(function () {
+        Route::get('/', [HasilUjiController::class, 'index'])->name('index');
+        Route::get('/data', [HasilUjiController::class, 'data'])->name('data');
+    });
 });

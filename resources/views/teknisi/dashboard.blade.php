@@ -40,12 +40,16 @@ use Illuminate\Support\Facades\Auth;
 
 @section('content')
 
+@can('admin')
 {{-- Button Tambah Data TA & Teknisi --}}
 <div class="demo-inline-spacing mb-3">
   <a href="{{ route('users.create') }}" class="btn btn-primary waves-effect waves-light">
     <span class="ti-xs ti ti-plus me-2"></span> Tambah Data TA & Teknisi
   </a>
 </div>
+
+
+{{-- Deskripsi Halaman --}}
 
 {{-- Card Data Tenaga Ahli & Teknisi --}}
 <div class="card">
@@ -89,4 +93,5 @@ use Illuminate\Support\Facades\Auth;
     </div>
   </div>
 </div>
+@endcan
 @endsection

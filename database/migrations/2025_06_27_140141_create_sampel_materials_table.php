@@ -13,18 +13,15 @@ return new class extends Migration
     {
         Schema::create('sampel_materials', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_sampel_material'); // Nama Sampel & Material
-            $table->integer('jumlah_sampel');       // Jumlah Sampel
-            $table->date('tanggal_penerimaan');    // Tanggal Penerimaan
-            $table->date('tanggal_pengembalian')->nullable(); // Tanggal Pengembalian (bisa kosong)
-            $table->boolean('status_data')->default(true); // Status Data (Aktif/Tidak Aktif)
+            $table->foreignId('test_id')->nullable()->constrained('tests')->onDelete('cascade');
+            $table->enum('status', ['menunggu_kedatangan', 'diterima_di_lab', 'sedang_diuji', 'pengujian_selesai', 'selesai']);
+            $table->string('nama_sampel_material');
+            $table->integer('jumlah_sampel');
+            $table->date('tanggal_penerimaan')->nullable();
+            $table->date('tanggal_pengembalian')->nullable();
             $table->timestamps();
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('sampel_materials');

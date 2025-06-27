@@ -42,12 +42,16 @@ use Illuminate\Support\Facades\Auth;
 
 @section('content')
 
+@can('admin')
 {{-- Button Tambah Data Alat & Bahan --}}
 <div class="demo-inline-spacing mb-3">
   <a href="{{ route('alat_bahan.create') }}" class="btn btn-primary waves-effect waves-light">
     <span class="ti-xs ti ti-plus me-2"></span> Tambah Data Alat & Bahan
   </a>
 </div>
+@endcan
+
+{{-- Deskripsi Halaman --}}
 
 {{-- Card Data Alat & Bahan --}}
 <div class="card">

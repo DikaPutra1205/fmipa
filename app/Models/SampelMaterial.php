@@ -55,4 +55,20 @@ class SampelMaterial extends Model
         // dengan kolom 'id' di tabel 'tests'.
         return $this->belongsTo(Test::class, 'test_id');
     }
+
+    public function getFormattedTestId(): string
+    {
+        return $this->test_id ? '#' . $this->test_id : 'Bukan Sampel Order Pengujian';
+    }
+
+    /**
+     * [BARU] Helper untuk menampilkan nama mitra terkait.
+     *
+     * @return string
+     */
+    public function getFormattedMitraName(): string
+    {
+        // Menggunakan optional chaining (?) untuk keamanan jika relasi test atau mitra tidak ada.
+        return $this->test?->mitra?->name ?? 'Manual Input';
+    }
 }

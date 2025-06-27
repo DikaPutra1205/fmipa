@@ -20,4 +20,8 @@ class Module extends Model
     {
         return $this->hasMany(Test::class);
     }
+
+    protected $casts = [
+        'details' => 'array',
+    ];
 }
