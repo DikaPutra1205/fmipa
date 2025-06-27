@@ -6,6 +6,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\MitraController;
 use App\Http\Controllers\AlatBahanController;
 use App\Http\Controllers\SampelMaterialController;
+use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\WizardDispatcherController;
+use App\Http\Controllers\SubmissionWizardController;
+use App\Http\Controllers\TestingTrackerController;
+use App\Http\Controllers\PaymentWizardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Auth;
@@ -107,4 +112,55 @@ Route::middleware(['auth'])->group(function () {
 
     // Rute untuk menghapus data Sampel & Material tertentu (DELETE request)
     Route::delete('/sample-material/{id}', [SampelMaterialController::class, 'destroy'])->name('sample_material.destroy');
+});
+
+Route::middleware(['auth'])->group(function () {
+
+    // =====================================================================
+    // RUTE UNTUK HALAMAN UTAMA SETIAP MODUL (DINAMIS)
+    // =====================================================================
+    // Ini menangani URL seperti /modul/xrd, /modul/sem-edx, dll.
+    Route::get('/modul/{module:code}', [ModuleController::class, 'show'])->name('module.show');
+    Route::get('/modul/{module:code}/data', [ModuleController::class, 'data'])->name('module.data');
+
+
+    // =====================================================================
+    // RUTE "PINTAR" UNTUK MENGARAHKAN KE WIZARD YANG TEPAT
+    // =====================================================================
+    // Ini adalah "gerbang" yang akan diakses oleh tombol [Lihat Detail]
+    Route::get('/wizard/dispatch/{test}', [WizardDispatcherController::class, 'dispatch'])->name('wizard.dispatcher');
+
+
+    // =====================================================================
+    // RUTE UNTUK WIZARD 1: PENGAJUAN & PENGIRIMAN SAMPEL
+    // =====================================================================
+    Route::prefix('pengajuan')->name('wizard.submission.')->group(function () {
+        Route::get('/create/{module:code}', [SubmissionWizardController::class, 'create'])->name('create'); // Untuk tombol [+ Ajukan Pengujian Baru]
+        Route::post('/store', [SubmissionWizardController::class, 'store'])->name('store'); // Menyimpan pengajuan awal
+        Route::get('/{test}', [SubmissionWizardController::class, 'show'])->name('show');
+        Route::post('/{test}/action', [SubmissionWizardController::class, 'approveOrReject'])->name('action');
+        Route::post('/{test}/store-sample', [SubmissionWizardController::class, 'storeSampleDetails'])->name('storeSample');
+        Route::post('/{test}/confirm-receipt', [SubmissionWizardController::class, 'confirmReceipt'])->name('confirmReceipt');
+    });
+
+
+    // =====================================================================
+    // RUTE UNTUK WIZARD 2: PELACAKAN PENGUJIAN & VERIFIKASI
+    // =====================================================================
+    Route::prefix('pelacakan')->name('wizard.tracking.')->group(function () {
+        Route::get('/{test}', [TestingTrackerController::class, 'show'])->name('show');
+        Route::post('/{test}/upload-result', [TestingTrackerController::class, 'uploadResult'])->name('upload');
+        Route::post('/{test}/verify-result', [TestingTrackerController::class, 'verifyResult'])->name('verify');
+    });
+
+
+    // =====================================================================
+    // RUTE UNTUK WIZARD 3: PEMBAYARAN & PENYELESAIAN
+    // =====================================================================
+    Route::prefix('pembayaran')->name('wizard.payment.')->group(function () {
+        Route::get('/{test}', [PaymentWizardController::class, 'show'])->name('show');
+        Route::post('/{test}/confirm', [PaymentWizardController::class, 'confirmPayment'])->name('confirm');
+        Route::post('/{test}/complete', [PaymentWizardController::class, 'completeOrder'])->name('complete');
+    });
+
 });

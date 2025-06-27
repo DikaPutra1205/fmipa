@@ -49,81 +49,54 @@
 @endsection
 
 @section('content')
-<!-- Form Edit Data Sampel & Material -->
-<div class="col-xl mb-6">
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Edit Data Sampel & Material</h5>
-            <small class="text-muted float-end">Ubah data sesuai kebutuhan</small>
-        </div>
-        <div class="card-body">
-            {{-- Form action mengarah ke rute update dengan ID sampel material --}}
-            <form action="{{ route('sample_material.update', $sampelMaterial->id) }}" method="POST">
-                @csrf {{-- Token CSRF Laravel, wajib ada --}}
-                @method('PUT') {{-- Metode HTTP PUT untuk operasi update --}}
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Form Edit Data Sampel & Material</h5>
+    </div>
+    <div class="card-body">
+        <form action="{{ route('sample_material.update', $sampelMaterial->id) }}" method="POST">
+            @csrf
+            @method('PUT')
 
-                {{-- Input Nama Sampel & Material --}}
-                <div class="mb-6">
-                    <label class="form-label" for="nama_sampel_material">Nama Sampel & Material</label>
-                    <input type="text" class="form-control" id="nama_sampel_material" name="nama_sampel_material"
-                           placeholder="Contoh: Tanah Merah, Besi Beton"
-                           value="{{ old('nama_sampel_material', $sampelMaterial->nama_sampel_material) }}" required />
-                    @error('nama_sampel_material')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
+            <div class="mb-3">
+                <label class="form-label" for="test_id">ID Order Terkait</label>
+                <input type="text" class="form-control" id="test_id" value="{{ $sampelMaterial->test_id ? '#' . $sampelMaterial->test_id : 'Manual Input' }}" disabled />
+            </div>
 
-                {{-- Input Jumlah Sampel --}}
-                <div class="mb-6">
-                    <label class="form-label" for="jumlah_sampel">Jumlah Sampel</label>
-                    <input type="number" class="form-control" id="jumlah_sampel" name="jumlah_sampel"
-                           placeholder="Contoh: 100"
-                           value="{{ old('jumlah_sampel', $sampelMaterial->jumlah_sampel) }}" required min="0" />
-                    @error('jumlah_sampel')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
+            <div class="mb-3">
+                <label class="form-label" for="nama_sampel_material">Nama Sampel</label>
+                <input type="text" class="form-control" name="nama_sampel_material" value="{{ old('nama_sampel_material', $sampelMaterial->nama_sampel_material) }}" required />
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label" for="jumlah_sampel">Jumlah Sampel</label>
+                <input type="number" class="form-control" name="jumlah_sampel" value="{{ old('jumlah_sampel', $sampelMaterial->jumlah_sampel) }}" required min="1" />
+            </div>
 
-                {{-- Input Tanggal Penerimaan --}}
-                <div class="mb-6">
-                    <label class="form-label" for="tanggal_penerimaan">Tanggal Penerimaan</label>
-                    <input type="text" class="form-control" id="tanggal_penerimaan" name="tanggal_penerimaan"
-                           placeholder="Pilih Tanggal Penerimaan"
-                           value="{{ old('tanggal_penerimaan', $sampelMaterial->tanggal_penerimaan) }}" required />
-                    @error('tanggal_penerimaan')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
+            <div class="mb-3">
+                <label class="form-label" for="status">Status Sampel</label>
+                <select id="status" name="status" class="form-select" required>
+                    @foreach(['menunggu_kedatangan', 'diterima_di_lab', 'sedang_diuji', 'pengujian_selesai', 'selesai'] as $status)
+                        <option value="{{ $status }}" {{ old('status', $sampelMaterial->status) == $status ? 'selected' : '' }}>
+                            {{ ucwords(str_replace('_', ' ', $status)) }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label" for="tanggal_penerimaan">Tanggal Penerimaan</label>
+                <input type="date" class="form-control" name="tanggal_penerimaan" value="{{ old('tanggal_penerimaan', $sampelMaterial->tanggal_penerimaan ? $sampelMaterial->tanggal_penerimaan->format('Y-m-d') : '') }}" />
+            </div>
 
-                {{-- Input Tanggal Pengembalian --}}
-                <div class="mb-6">
-                    <label class="form-label" for="tanggal_pengembalian">Tanggal Pengembalian (Opsional)</label>
-                    <input type="text" class="form-control" id="tanggal_pengembalian" name="tanggal_pengembalian"
-                           placeholder="Pilih Tanggal Pengembalian"
-                           value="{{ old('tanggal_pengembalian', $sampelMaterial->tanggal_pengembalian) }}" />
-                    @error('tanggal_pengembalian')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
+            <div class="mb-3">
+                <label class="form-label" for="tanggal_pengembalian">Tanggal Pengembalian (Opsional)</label>
+                <input type="text" class="form-control" id="tanggal_pengembalian" name="tanggal_pengembalian" value="{{ old('tanggal_pengembalian', $sampelMaterial->tanggal_pengembalian) }}" />
+            </div>
 
-                {{-- Select Status Data --}}
-                <div class="mb-6">
-                    <label class="form-label" for="status_data">Status Data</label>
-                    <select id="status_data" name="status_data" class="form-select" required>
-                        <option value="" disabled>Pilih Status</option>
-                        {{-- Menggunakan $sampelMaterial->status_data untuk pre-select opsi --}}
-                        <option value="1" {{ old('status_data', $sampelMaterial->status_data) == '1' ? 'selected' : '' }}>Aktif</option>
-                        <option value="0" {{ old('status_data', $sampelMaterial->status_data) == '0' ? 'selected' : '' }}>Tidak Aktif</option>
-                    </select>
-                    @error('status_data')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                {{-- Tombol Simpan Perubahan --}}
-                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-            </form>
-        </div>
+            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+            <a href="{{ route('sample_material.dashboard') }}" class="btn btn-label-secondary">Batal</a>
+        </form>
     </div>
 </div>
 @endsection

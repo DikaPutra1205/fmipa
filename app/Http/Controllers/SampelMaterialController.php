@@ -1,198 +1,152 @@
 <?php
 
+// File: app/Http/Controllers/SampelMaterialController.php (Versi Baru)
+
 namespace App\Http\Controllers;
 
-use App\Models\SampelMaterial; // Import model SampelMaterial
+use App\Models\SampelMaterial;
+use App\Models\Test; // Import model Test
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // Jika perlu filter berdasarkan user role
+use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests; // [PERBAIKAN] Import trait yang diperlukan
 
 class SampelMaterialController extends Controller
 {
-    // Method untuk menampilkan view halaman sampel dan material
-    public function index()
+    use AuthorizesRequests; // [PERBAIKAN] Gunakan trait di dalam class
+
+    /**
+     * Menampilkan halaman dashboard untuk monitoring semua sampel.
+     */
+    public function index(): View
     {
-        // Mengembalikan view untuk dashboard Sampel & Material.
-        // Pastikan Anda memiliki file Blade di resources/views/sample_material/dashboard.blade.php
+        // View ini sekarang adalah dashboard monitoring, bukan CRUD biasa.
         return view('sample_material.dashboard');
     }
 
     /**
-     * Mengambil data sampel dan material untuk DataTables.
-     * Data ini akan di-*fetch* oleh JavaScript DataTables melalui AJAX.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * Menyediakan data untuk DataTables di halaman dashboard.
      */
     public function getData(Request $request)
     {
-        $data = SampelMaterial::query();
-        $user = Auth::user();
+        // Mengambil data sampel beserta relasi ke order (test) dan pemilik order (mitra)
+        $query = SampelMaterial::with(['test', 'test.mitra']);
 
-        return DataTables::of($data)
+        return DataTables::of($query)
             ->addIndexColumn()
-            ->editColumn('status_data', function ($row) {
-                return $row->status_data ? 'Aktif' : 'Tidak Aktif';
+            ->addColumn('test_id', function ($row) {
+                // Menampilkan ID order terkait
+                return $row->test ? '#' . $row->test->id : '-';
             })
-            ->addColumn('aksi', function ($row) use ($user) {
-                $buttons = '';
-                if ($user && $user->role === 'admin') {
+            ->addColumn('mitra_name', function ($row) {
+                // Menampilkan nama mitra pemilik order
+                return $row->test->mitra->name ?? 'Manual Input';
+            })
+            ->editColumn('status', function ($row) {
+                // Memberi warna pada status sampel
+                $badges = [
+                    'menunggu_kedatangan' => 'bg-label-secondary',
+                    'diterima_di_lab' => 'bg-label-info',
+                    'sedang_diuji' => 'bg-label-primary',
+                    'pengujian_selesai' => 'bg-label-warning',
+                    'selesai' => 'bg-label-success',
+                ];
+                $badgeClass = $badges[$row->status] ?? 'bg-label-dark';
+                $statusText = ucwords(str_replace('_', ' ', $row->status));
+                return '<span class="badge ' . $badgeClass . '">' . $statusText . '</span>';
+            })
+            ->editColumn('tanggal_penerimaan', function ($row) {
+                return $row->tanggal_penerimaan ? $row->tanggal_penerimaan->format('d M Y') : '-';
+            })
+            ->addColumn('aksi', function ($row) {
+                // Tombol aksi hanya untuk admin
+                if (Auth::user()->role === 'admin') {
                     $editUrl = route('sample_material.edit', $row->id);
-
-                    $buttons .= '
+                    $buttons = '
                         <a href="' . $editUrl . '" class="btn btn-sm btn-icon btn-primary me-1" title="Edit">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M15 6l3 3l-9 9h-3v-3z" />
-                                <path d="M18 3l3 3" />
-                            </svg>
+                            <i class="ti ti-pencil"></i>
                         </a>
-                        <button type="button" class="btn btn-sm btn-icon btn-danger btn-delete-sample-material"
+                        <button type="button" class="btn btn-sm btn-icon btn-danger btn-delete-sample"
                                 data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal"
                                 data-id="' . $row->id . '"
                                 data-sample-name="' . htmlspecialchars($row->nama_sampel_material) . '" title="Hapus">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M4 7l16 0" />
-                                <path d="M10 11l0 6" />
-                                <path d="M14 11l0 6" />
-                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                <path d="M9 7l0 -3h6l0 3" />
-                            </svg>
+                            <i class="ti ti-trash"></i>
                         </button>
                     ';
+                    return $buttons;
                 }
-                return $buttons;
+                return '-';
             })
-            ->rawColumns(['aksi'])
+            ->rawColumns(['status', 'aksi'])
             ->make(true);
     }
 
     /**
-     * Menampilkan form untuk membuat Sampel Material baru.
-     * Rute: GET /sample-material/create
-     *
-     * @return \Illuminate\View\View
+     * [BARU] Menampilkan form untuk membuat Sampel Material baru.
      */
-    public function create()
+    public function create(): View
     {
-        // Opsional: Anda bisa menambahkan pengecekan role di sini
-        // Misalnya, hanya user dengan role 'admin' yang bisa menambah data sampel material.
-        // if (Auth::user()->role !== 'admin') {
-        //     abort(403, 'Unauthorized. Anda tidak memiliki akses untuk menambah data sampel & material.');
-        // }
-
-        // Mengembalikan view yang berisi form penambahan data Sampel Material.
-        // Pastikan Anda memiliki file Blade di resources/views/sample_material/create.blade.php
+        $this->authorize('admin'); // Asumsi hanya admin yang bisa menambah manual
         return view('sample_material.create');
     }
 
     /**
-     * Menyimpan Sampel Material yang baru dibuat ke database.
-     * Rute: POST /sample-material
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * [BARU] Menyimpan Sampel Material yang baru dibuat.
      */
     public function store(Request $request)
     {
-        // Memvalidasi data yang masuk dari form.
-        // 'nama_sampel_material', 'jumlah_sampel', 'tanggal_penerimaan', 'status_data' wajib diisi.
-        // 'tanggal_pengembalian' bersifat opsional (nullable) dan harus setelah atau sama dengan tanggal penerimaan.
+        $this->authorize('admin');
+
         $request->validate([
             'nama_sampel_material' => 'required|string|max:255',
-            'jumlah_sampel' => 'required|integer|min:0',
-            'tanggal_penerimaan' => 'required|date',
-            'tanggal_pengembalian' => 'nullable|date|after_or_equal:tanggal_penerimaan',
-            'status_data' => 'required|boolean',
+            'jumlah_sampel' => 'required|integer|min:1',
+            'status' => 'required|in:menunggu_kedatangan,diterima_di_lab,sedang_diuji,pengujian_selesai,selesai',
+            'tanggal_penerimaan' => 'nullable|date',
         ]);
 
-        // Membuat record baru di tabel 'sampel_materials' menggunakan Eloquent ORM.
-        // Pastikan kolom-kolom ini ada di properti $fillable di model SampelMaterial.
+        // Membuat record baru. `test_id` akan otomatis NULL karena tidak ada di form.
         SampelMaterial::create($request->all());
 
-        // Mengalihkan user kembali ke halaman dashboard Sampel & Material dengan pesan sukses.
-        // Ganti 'sample_material.dashboard' dengan nama rute aktual dashboard Anda jika berbeda.
-        return redirect()->route('sample_material.dashboard')->with('success', 'Data sampel & material berhasil ditambahkan!');
+        return redirect()->route('sample_material.dashboard')->with('success', 'Data sampel manual berhasil ditambahkan!');
     }
-
+    
     /**
      * Menampilkan form untuk mengedit Sampel Material tertentu.
-     * Rute: GET /sample-material/{id}/edit
-     *
-     * @param  int  $id
-     * @return \Illuminate\View\View
      */
-    public function edit($id)
+    public function edit(SampelMaterial $sampelMaterial): View
     {
-        // Memastikan hanya 'admin' yang bisa mengakses fungsi edit.
-        if (Auth::user()->role !== 'admin') {
-            abort(403, 'Unauthorized. Anda tidak memiliki akses untuk mengedit data ini.');
-        }
-
-        // Mencari data SampelMaterial berdasarkan ID atau menampilkan error 404 jika tidak ditemukan.
-        $sampelMaterial = SampelMaterial::findOrFail($id);
-
-        // Mengembalikan view untuk form edit, melewatkan objek $sampelMaterial ke view.
-        // Pastikan Anda memiliki file Blade di resources/views/sample_material/edit.blade.php
+        $this->authorize('admin');
         return view('sample_material.edit', compact('sampelMaterial'));
     }
 
     /**
-     * Menyimpan perubahan (update) pada Sampel Material yang spesifik di database.
-     * Rute: PUT /sample-material/{id}
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
+     * Menyimpan perubahan (update) pada Sampel Material.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, SampelMaterial $sampelMaterial)
     {
-        // Memastikan hanya 'admin' yang bisa mengakses fungsi update.
-        if (Auth::user()->role !== 'admin') {
-            abort(403, 'Unauthorized. Anda tidak memiliki akses untuk memperbarui data ini.');
-        }
+        $this->authorize('admin');
 
-        // Mencari data SampelMaterial yang akan diupdate.
-        $sampelMaterial = SampelMaterial::findOrFail($id);
-
-        // Memvalidasi data yang masuk dari form update.
         $request->validate([
             'nama_sampel_material' => 'required|string|max:255',
-            'jumlah_sampel' => 'required|integer|min:0',
-            'tanggal_penerimaan' => 'required|date',
+            'jumlah_sampel' => 'required|integer|min:1',
+            'status' => 'required|in:menunggu_kedatangan,diterima_di_lab,sedang_diuji,pengujian_selesai,selesai',
+            'tanggal_penerimaan' => 'nullable|date',
             'tanggal_pengembalian' => 'nullable|date|after_or_equal:tanggal_penerimaan',
-            'status_data' => 'required|boolean',
         ]);
 
-        // Memperbarui record di database dengan data baru dari request.
         $sampelMaterial->update($request->all());
 
-        // Mengalihkan user kembali ke halaman dashboard dengan pesan sukses.
-        return redirect()->route('sample_material.dashboard')->with('success', 'Data sampel & material berhasil diperbarui!');
+        return redirect()->route('sample_material.dashboard')->with('success', 'Data sampel berhasil diperbarui!');
     }
 
     /**
-     * Menghapus data Sampel Material tertentu dari database.
-     * Rute: DELETE /sample-material/{id}
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * Menghapus data Sampel Material.
      */
-    public function destroy($id)
+    public function destroy(SampelMaterial $sampelMaterial)
     {
-        // Memastikan hanya 'admin' yang bisa mengakses fungsi hapus.
-        if (Auth::user()->role !== 'admin') {
-            // Mengembalikan respons JSON dengan status 403 (Forbidden) jika tidak berwenang.
-            return response()->json(['success' => false, 'message' => 'Unauthorized. Anda tidak memiliki akses untuk menghapus data ini.'], 403);
-        }
-
-        // Mencari data SampelMaterial yang akan dihapus.
-        $sampelMaterial = SampelMaterial::findOrFail($id);
-        // Menghapus record dari database.
+        $this->authorize('admin');
         $sampelMaterial->delete();
-
-        // Mengembalikan respons JSON dengan pesan sukses.
-        return response()->json(['success' => true, 'message' => 'Data sampel & material berhasil dihapus.']);
+        return response()->json(['success' => true, 'message' => 'Data sampel berhasil dihapus.']);
     }
 }
