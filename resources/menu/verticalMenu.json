@@ -19,6 +19,18 @@
       "slug": "data-institusi-mitra"
     },
     {
+      "url": "/module",
+      "name": "Data Module",
+      "icon": "menu-icon tf-icons ti ti-flask-2",
+      "slug": "data-module"
+    },
+    {
+      "url": "/test_package",
+      "name": "Data Paket Pengujian",
+      "icon": "menu-icon tf-icons ti ti-package",
+      "slug": "data-test-package"
+    },
+    {
       "menuHeader": "Data Inventori"
     },
     {

@@ -9,7 +9,8 @@ class Module extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['code', 'name', 'description'];
+    protected $table = 'modules';
+    protected $fillable = ['code', 'name', 'description','details'];
 
     public function testPackages()
     {

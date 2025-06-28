@@ -47,8 +47,7 @@ use Illuminate\Support\Facades\Auth;
 
 <div class="card">
   <h5 class="card-header">Manajemen Sampel & Material</h5>
-  <div class="card-body">
-    <p class="text-muted">Halaman ini menampilkan semua sampel yang terdaftar dalam sistem, baik yang dibuat melalui wizard pengujian maupun yang ditambahkan secara manual.</p>
+  <div class="card-body">Halaman ini menampilkan semua sampel yang terdaftar dalam sistem, baik yang dibuat melalui wizard pengujian maupun yang ditambahkan secara manual.
   </div>
   <div class="card-datatable text-nowrap">
     <table class="datatables-ajax table table-hover">

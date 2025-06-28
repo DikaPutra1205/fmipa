@@ -9,9 +9,10 @@ class TestPackage extends Model
 {
     use HasFactory;
 
+    protected $table = 'test_packages';
     protected $fillable = ['module_id', 'name', 'price'];
 
-    public function module()    
+    public function module()
     {
         return $this->belongsTo(Module::class);
     }
