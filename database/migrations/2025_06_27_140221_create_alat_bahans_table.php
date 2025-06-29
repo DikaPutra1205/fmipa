@@ -13,17 +13,13 @@ return new class extends Migration
     {
         Schema::create('alat_bahans', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_alat_bbahan'); // Sesuaikan dengan nama kolom yang ada
+            $table->string('nama_alat_bahan');
             $table->string('kondisi_alat');
             $table->integer('jumlah_alat');
             $table->boolean('status_data')->default(true);
             $table->timestamps();
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('alat_bahans');

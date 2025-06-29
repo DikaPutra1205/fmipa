@@ -2,34 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AlatBahan; // Impor model AlatBahan
+use App\Models\AlatBahan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // Untuk mendapatkan user yang sedang login
-use Yajra\DataTables\Facades\DataTables; // Untuk mengelola DataTables
+use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 
 class AlatBahanController extends Controller
 {
-    /**
-     * Menampilkan view halaman dashboard alat dan bahan.
-     * Rute: GET /alat-bahan
-     *
-     * @return \Illuminate\View\View
-     */
     public function index()
     {
-        // Mengembalikan view untuk dashboard Alat & Bahan.
-        // Pastikan Anda memiliki file Blade di resources/views/alat_bahan/dashboard.blade.php
+        
         return view('alat_bahan.dashboard');
     }
 
-    /**
-     * Mengambil data alat dan bahan untuk DataTables.
-     * Data ini akan di-*fetch* oleh JavaScript DataTables melalui AJAX.
-     * Rute: GET /alat-bahan/data
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function getData(Request $request)
     {
         // Mengambil semua data dari model AlatBahan.
@@ -81,32 +66,12 @@ class AlatBahanController extends Controller
             ->make(true); // Membuat respons JSON yang siap digunakan oleh DataTables.
     }
 
-    /**
-     * Menampilkan form untuk membuat Alat & Bahan baru.
-     * Rute: GET /alat-bahan/create
-     *
-     * @return \Illuminate\View\View
-     */
     public function create()
     {
-        // Opsional: Anda bisa menambahkan pengecekan role di sini
-        // Misalnya, hanya user dengan role 'admin' yang bisa menambah data alat & bahan.
-        // if (Auth::user()->role !== 'admin') {
-        //     abort(403, 'Unauthorized. Anda tidak memiliki akses untuk menambah data alat & bahan.');
-        // }
-
-        // Mengembalikan view yang berisi form penambahan data Alat & Bahan.
-        // Pastikan Anda memiliki file Blade di resources/views/alat_bahan/create.blade.php
+       
         return view('alat_bahan.create');
     }
 
-    /**
-     * Menyimpan Alat & Bahan yang baru dibuat ke database.
-     * Rute: POST /alat-bahan
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function store(Request $request)
     {
         // Memvalidasi data yang masuk dari form.
@@ -117,22 +82,11 @@ class AlatBahanController extends Controller
             'status_data' => 'required|boolean',
         ]);
 
-        // Membuat record baru di tabel 'alat_bahans' menggunakan Eloquent ORM.
-        // Pastikan kolom-kolom ini ada di properti $fillable di model AlatBahan.
         AlatBahan::create($request->all());
 
-        // Mengalihkan user kembali ke halaman dashboard Alat & Bahan dengan pesan sukses.
-        // Ganti 'alat_bahan.dashboard' dengan nama rute aktual dashboard Anda jika berbeda.
         return redirect()->route('alat_bahan.dashboard')->with('success', 'Data Alat & Bahan berhasil ditambahkan!');
     }
 
-    /**
-     * Menampilkan form untuk mengedit Alat & Bahan tertentu.
-     * Rute: GET /alat-bahan/{id}/edit
-     *
-     * @param  int  $id
-     * @return \Illuminate\View\View
-     */
     public function edit($id)
     {
         // Memastikan hanya 'admin' yang bisa mengakses fungsi edit.
@@ -143,19 +97,9 @@ class AlatBahanController extends Controller
         // Mencari data AlatBahan berdasarkan ID atau menampilkan error 404 jika tidak ditemukan.
         $alatBahan = AlatBahan::findOrFail($id);
 
-        // Mengembalikan view untuk form edit, melewatkan objek $alatBahan ke view.
-        // Pastikan Anda memiliki file Blade di resources/views/alat_bahan/edit.blade.php
         return view('alat_bahan.edit', compact('alatBahan'));
     }
 
-    /**
-     * Menyimpan perubahan (update) pada Alat & Bahan yang spesifik di database.
-     * Rute: PUT /alat-bahan/{id}
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function update(Request $request, $id)
     {
         // Memastikan hanya 'admin' yang bisa mengakses fungsi update.
@@ -181,13 +125,6 @@ class AlatBahanController extends Controller
         return redirect()->route('alat_bahan.dashboard')->with('success', 'Data Alat & Bahan berhasil diperbarui!');
     }
 
-    /**
-     * Menghapus data Alat & Bahan tertentu dari database.
-     * Rute: DELETE /alat-bahan/{id}
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function destroy($id)
     {
         // Memastikan hanya 'admin' yang bisa mengakses fungsi hapus.

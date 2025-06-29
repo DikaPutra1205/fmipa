@@ -41,11 +41,15 @@ use Illuminate\Support\Facades\Auth;
 @section('content')
 
 {{-- Button Tambah Mitra --}}
+@can('admin')
 <div class="demo-inline-spacing mb-3">
   <a href="{{ route('mitra.create') }}" class="btn btn-primary waves-effect waves-light">
     <span class="ti-xs ti ti-plus me-2"></span> Tambah Mitra
   </a>
 </div>
+@endcan
+
+{{-- Deskripsi Halaman --}}
 
 {{-- Card Data Mitra --}}
 <div class="card">

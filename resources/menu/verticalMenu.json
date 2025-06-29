@@ -20,6 +20,7 @@
     },
     {
       "url": "/module",
+<<<<<<< HEAD
       "name": "Data Modul",
       "icon": "menu-icon tf-icons ti ti-flask-2",
       "slug": "data-institusi-mitra"
@@ -29,6 +30,17 @@
       "name": "Paket Pengujian",
       "icon": "menu-icon tf-icons ti ti-folder-dollar",
       "slug": "data-institusi-mitra"
+=======
+      "name": "Data Module",
+      "icon": "menu-icon tf-icons ti ti-flask-2",
+      "slug": "data-module"
+    },
+    {
+      "url": "/test_package",
+      "name": "Data Paket Pengujian",
+      "icon": "menu-icon tf-icons ti ti-package",
+      "slug": "data-test-package"
+>>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
     },
     {
       "menuHeader": "Data Inventori"
@@ -47,52 +59,37 @@
       "menuHeader": "Hasil Uji Material"
     },
     {
-      "url": "app/email",
-      "name": "Aluminium dan Logam",
-      "slug": "aluminium-logam"
+      "url": "modul/xrd",
+      "name": "XRD",
+      "slug": "xrd"
     },
     {
-      "url": "app/chat",
-      "name": "Polimer & Plastik",
-      "slug": "polimer-plastik"
+      "url": "modul/xrf",
+      "name": "XRF",
+      "slug": "xrf"
     },
     {
-      "url": "app/chat",
-      "name": "Keramik & Refraktori",
-      "slug": "keramik-refraktori"
+      "url": "modul/SEM-EDX",
+      "name": "SEM-EDX",
+      "slug": "SEM-EDX"
     },
     {
-      "url": "app/chat",
-      "name": "Komposit",
-      "slug": "komposit"
+      "url": "modul/UV-VIS",
+      "name": "UV-VIS",
+      "slug": "UV-VIS"
     },
     {
-      "url": "app/chat",
-      "name": "Nanomaterial",
-      "slug": "nanomaterial"
-    },
-    {
-      "url": "app/chat",
-      "name": "Biomaterial",
-      "slug": "biomaterial"
-    },
-    {
-      "url": "app/chat",
-      "name": "Kaca & Material Amorf",
-      "slug": "kaca-material-amorf"
+      "url": "modul/FTIR",
+      "name": "FTIR",
+      "slug": "FTIR"
     },
     {
       "menuHeader": "Cetak Laporan"
     },
     {
-      "url": "app/email",
-      "name": "Laporan Uji Material",
-      "slug": "laporan-uji-material"
-    },
-    {
-      "url": "app/chat",
-      "name": "Laporan Keuangan",
-      "slug": "laporan-keuangan"
+      "url": "hasil-uji",
+      "name": "Laporan Hasil Uji",
+      "slug": "hasil-uji"
     }
   ]
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+<<<<<<< HEAD
 use App\Models\SampelMaterial; // Import model SampelMaterial
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; // Jika perlu filter berdasarkan user role
@@ -25,10 +26,30 @@ class SampelMaterialController extends Controller
     public function getData(Request $request)
     {
         $data = SampelMaterial::query();
+=======
+use App\Models\Module;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use Yajra\DataTables\Facades\DataTables;
+
+class ModuleController extends Controller
+{
+    public function index()
+    {
+
+        return view('module.dashboard');
+    }
+
+    public function getData(Request $request)
+    {
+        $data = Module::query();
+>>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
         $user = Auth::user();
 
         return DataTables::of($data)
             ->addIndexColumn()
+<<<<<<< HEAD
             ->editColumn('status_data', function ($row) {
                 return $row->status_data ? 'Aktif' : 'Tidak Aktif';
             })
@@ -36,6 +57,40 @@ class SampelMaterialController extends Controller
                 $buttons = '';
                 if ($user && $user->role === 'admin') {
                     $editUrl = route('sample_material.edit', $row->id);
+=======
+
+            ->editColumn('details', function ($row) {
+                $details = is_array($row->details) ? $row->details : json_decode($row->details, true);
+                if (!is_array($details)) return '-';
+            
+                $output = '<div class="detail-cell">';
+                $output .= "<strong>Alat:</strong> " . ($details['alat'] ?? '-') . "<br>";
+                $output .= "<strong>Metode:</strong> " . ($details['metode'] ?? '-') . "<br>";
+                $output .= "<strong>Deskripsi:</strong> " . ($details['deskripsi_lengkap'] ?? '-') . "<br>";
+            
+                if (!empty($details['jenis_sampel']) && is_array($details['jenis_sampel'])) {
+                    $output .= "<strong>Jenis Sampel:</strong><ul>";
+                    foreach ($details['jenis_sampel'] as $sampel) {
+                        $tipe = $sampel['tipe'] ?? '-';
+                        $spek = $sampel['spek'] ?? '-';
+                        $output .= "<li><strong>$tipe</strong>: $spek</li>";
+                    }
+                    $output .= "</ul>";
+                }
+                $output .= '</div>';
+            
+                return $output;
+            })
+            
+            ->rawColumns(['aksi', 'details'])
+
+
+
+            ->addColumn('aksi', function ($row) use ($user) {
+                $buttons = '';
+                if ($user && $user->role === 'admin') {
+                    $editUrl = route('module.edit', $row->id);
+>>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
 
                     $buttons .= '
                         <a href="' . $editUrl . '" class="btn btn-sm btn-icon btn-primary me-1" title="Edit">
@@ -45,10 +100,17 @@ class SampelMaterialController extends Controller
                                 <path d="M18 3l3 3" />
                             </svg>
                         </a>
+<<<<<<< HEAD
                         <button type="button" class="btn btn-sm btn-icon btn-danger btn-delete-sample-material"
                                 data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal"
                                 data-id="' . $row->id . '"
                                 data-sample-name="' . htmlspecialchars($row->nama_module) . '" title="Hapus">
+=======
+                        <button type="button" class="btn btn-sm btn-icon btn-danger btn-delete-module"
+                                data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal"
+                                data-id="' . $row->id . '"
+                                data-module-name="' . htmlspecialchars($row->nama_module) . '" title="Hapus">
+>>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                 <path d="M4 7l16 0" />
@@ -62,12 +124,16 @@ class SampelMaterialController extends Controller
                 }
                 return $buttons;
             })
+<<<<<<< HEAD
             ->rawColumns(['aksi'])
+=======
+>>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
             ->make(true);
     }
 
     public function create()
     {
+<<<<<<< HEAD
        
         return view('sample_material.create');
     }
@@ -86,6 +152,33 @@ class SampelMaterialController extends Controller
         return redirect()->route('sample_material.dashboard')->with('success', 'Data sampel & material berhasil ditambahkan!');
     }
 
+=======
+
+        return view('module.create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string', // perbaikan dari 'text'
+            'details.alat' => 'required|string',
+            'details.metode' => 'required|string',
+            'details.deskripsi_lengkap' => 'required|string',
+            'details.jenis_sampel' => 'required|array|min:1',
+            'details.jenis_sampel.*.tipe' => 'required|string',
+            'details.jenis_sampel.*.spek' => 'required|string',
+        ]);
+
+        $data = $request->only(['code', 'name', 'description']);
+        $data['details'] = json_encode($request->details); // konversi array ke JSON string
+
+        Module::create($data);
+
+        return redirect()->route('module.dashboard')->with('success', 'Data Module berhasil ditambahkan!');
+    }
+>>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
 
     public function edit($id)
     {
@@ -94,9 +187,16 @@ class SampelMaterialController extends Controller
             abort(403, 'Unauthorized. Anda tidak memiliki akses untuk mengedit data ini.');
         }
 
+<<<<<<< HEAD
         $sampelMaterial = SampelMaterial::findOrFail($id);
 
         return view('sample_material.edit', compact('sampelMaterial'));
+=======
+        // Mencari data Module berdasarkan ID atau menampilkan error 404 jika tidak ditemukan.
+        $Module = Module::findOrFail($id);
+
+        return view('module.edit', compact('Module'));
+>>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
     }
 
     public function update(Request $request, $id)
@@ -106,6 +206,7 @@ class SampelMaterialController extends Controller
             abort(403, 'Unauthorized. Anda tidak memiliki akses untuk memperbarui data ini.');
         }
 
+<<<<<<< HEAD
         // Mencari data SampelMaterial yang akan diupdate.
         $sampelMaterial = SampelMaterial::findOrFail($id);
 
@@ -124,10 +225,33 @@ class SampelMaterialController extends Controller
     }
 
 
+=======
+        // Mencari data Module yang akan diupdate.
+        $Module = Module::findOrFail($id);
+
+        // Memvalidasi data yang masuk dari form update.
+        $request->validate([
+            'code' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string', // perbaikan dari 'text'
+            'details.alat' => 'required|string',
+            'details.metode' => 'required|string',
+            'details.deskripsi_lengkap' => 'required|string',
+            'details.jenis_sampel' => 'required|array|min:1',
+            'details.jenis_sampel.*.tipe' => 'required|string',
+            'details.jenis_sampel.*.spek' => 'required|string',
+        ]);
+
+        $Module->update($request->all());
+        return redirect()->route('module.dashboard')->with('success', 'Data Module berhasil diperbarui!');
+    }
+
+>>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
     public function destroy($id)
     {
         // Memastikan hanya 'admin' yang bisa mengakses fungsi hapus.
         if (Auth::user()->role !== 'admin') {
+<<<<<<< HEAD
             // Mengembalikan respons JSON dengan status 403 (Forbidden) jika tidak berwenang.
             return response()->json(['success' => false, 'message' => 'Unauthorized. Anda tidak memiliki akses untuk menghapus data ini.'], 403);
         }
@@ -139,5 +263,13 @@ class SampelMaterialController extends Controller
 
         // Mengembalikan respons JSON dengan pesan sukses.
         return response()->json(['success' => true, 'message' => 'Data sampel & material berhasil dihapus.']);
+=======
+            return response()->json(['success' => false, 'message' => 'Unauthorized. Anda tidak memiliki akses untuk menghapus data ini.'], 403);
+        }
+
+        $Module = Module::findOrFail($id);
+        $Module->delete();
+        return response()->json(['success' => true, 'message' => 'Data Module berhasil dihapus.']);
+>>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
     }
 }

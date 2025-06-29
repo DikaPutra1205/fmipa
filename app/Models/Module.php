@@ -9,7 +9,8 @@ class Module extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['code', 'name', 'description'];
+    protected $table = 'modules';
+    protected $fillable = ['code', 'name', 'description','details'];
 
     public function testPackages()
     {
@@ -20,8 +21,15 @@ class Module extends Model
     {
         return $this->hasMany(Test::class);
     }
+<<<<<<< HEAD
     public function services()
     {
         return $this->hasMany(TestPackage::class);
     }
+=======
+
+    protected $casts = [
+        'details' => 'array',
+    ];
+>>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
 }

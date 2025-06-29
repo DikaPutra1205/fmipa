@@ -7,7 +7,15 @@ use App\Http\Controllers\MitraController;
 use App\Http\Controllers\AlatBahanController;
 use App\Http\Controllers\SampelMaterialController;
 use App\Http\Controllers\ModuleController;
+<<<<<<< HEAD
 use App\Http\Controllers\TestPackageController;
+=======
+use App\Http\Controllers\WizardDispatcherController;
+use App\Http\Controllers\SubmissionWizardController;
+use App\Http\Controllers\TestingTrackerController;
+use App\Http\Controllers\PaymentWizardController;
+use App\Http\Controllers\HasilUjiController;
+>>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
 use App\Models\TestPackage;
@@ -52,7 +60,6 @@ Route::middleware(['auth'])->group(function () {
     })->name('mitra.dashboard');
 
     Route::get('/mitra/data', [MitraController::class, 'getData'])->name('mitra.data');
-
     Route::get('/mitra/create', [MitraController::class, 'create'])->name('mitra.create');
     Route::post('/mitra', [MitraController::class, 'store'])->name('mitra.store');
     Route::get('/mitra/{id}/edit', [MitraController::class, 'edit'])->name('mitra.edit');
@@ -69,21 +76,10 @@ Route::middleware(['auth'])->group(function () {
     })->name('alat_bahan.dashboard');
 
     Route::get('/alat-bahan/data', [AlatBahanController::class, 'getData'])->name('alat_bahan.data');
-
-    // Rute untuk Admin (jika ada edit/delete untuk alat & bahan)
     Route::get('/alat-bahan/create', [AlatBahanController::class, 'create'])->name('alat_bahan.create');
-
-    // Rute untuk menyimpan data baru Alat & Bahan dari form (POST request)
     Route::post('/alat-bahan', [AlatBahanController::class, 'store'])->name('alat_bahan.store');
-
-    // Rute untuk menampilkan form edit Alat & Bahan tertentu
-    // {id} adalah parameter untuk ID Alat & Bahan yang akan diedit
     Route::get('/alat-bahan/{id}/edit', [AlatBahanController::class, 'edit'])->name('alat_bahan.edit');
-
-    // Rute untuk menyimpan perubahan (update) data Alat & Bahan tertentu (PUT/PATCH request)
     Route::put('/alat-bahan/{id}', [AlatBahanController::class, 'update'])->name('alat_bahan.update');
-
-    // Rute untuk menghapus data Alat & Bahan tertentu (DELETE request)
     Route::delete('/alat-bahan/{id}', [AlatBahanController::class, 'destroy'])->name('alat_bahan.destroy');
 });
 
@@ -94,29 +90,23 @@ Route::middleware(['auth'])->group(function () {
     })->name('sample_material.dashboard');
 
     Route::get('/sample-material/data', [SampelMaterialController::class, 'getData'])->name('sample_material.data');
-
-    // Rute untuk Admin (jika ada edit/delete untuk Sample Material)
     Route::get('/sample-material/create', [SampelMaterialController::class, 'create'])->name('sample_material.create');
-
-    // Rute untuk menyimpan data baru Sampel & Material dari form (POST request)
     Route::post('/sample-material', [SampelMaterialController::class, 'store'])->name('sample_material.store');
-
-    // Rute untuk menampilkan form edit Sampel & Material tertentu
-    // {id} adalah parameter untuk ID Sampel & Material yang akan diedit
     Route::get('/sample-material/{id}/edit', [SampelMaterialController::class, 'edit'])->name('sample_material.edit');
-
-    // Rute untuk menyimpan perubahan (update) data Sampel & Material tertentu (PUT/PATCH request)
     Route::put('/sample-material/{id}', [SampelMaterialController::class, 'update'])->name('sample_material.update');
-
-    // Rute untuk menghapus data Sampel & Material tertentu (DELETE request)
     Route::delete('/sample-material/{id}', [SampelMaterialController::class, 'destroy'])->name('sample_material.destroy');
 });
 
+<<<<<<< HEAD
+=======
+// Module
+>>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
 Route::middleware(['auth'])->group(function () {
     Route::get('/module', function () {
         return view('module.dashboard');
     })->name('module.dashboard');
 
+<<<<<<< HEAD
     Route::get('/module/data', [ModuleController::class, 'getData'])->name('module.data');
 
     Route::get('/module/create', [ModuleController::class, 'create'])->name('module.create');
@@ -128,11 +118,23 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/module/{id}', [ModuleController::class, 'destroy'])->name('module.destroy');
 });
 
+=======
+    Route::get('/module/view', [ModuleController::class, 'getData'])->name('module.view');
+    Route::get('/module/create', [ModuleController::class, 'create'])->name('module.create');
+    Route::post('/module', [ModuleController::class, 'store'])->name('module.store');
+    Route::get('/module/{id}/edit', [ModuleController::class, 'edit'])->name('module.edit');
+    Route::put('/module/{id}', [ModuleController::class, 'update'])->name('module.update');
+    Route::delete('/module/{id}', [ModuleController::class, 'destroy'])->name('module.destroy');
+});
+
+//Test Package
+>>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
 Route::middleware(['auth'])->group(function () {
     Route::get('/test_package', function () {
         return view('test_package.dashboard');
     })->name('test_package.dashboard');
 
+<<<<<<< HEAD
     Route::get('/test_package/data', [TestPackageController::class, 'getData'])->name('test_package.data');
 
     Route::get('/test_package/create', [TestPackageController::class, 'create'])->name('test_package.create');
@@ -140,4 +142,67 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/test_package/{id}/edit', [TestPackageController::class, 'edit'])->name('test_package.edit');
     Route::put('/test_package/{id}', [TestPackageController::class, 'update'])->name('test_package.update');
     Route::delete('/test_package/{id}', [TestPackageController::class, 'destroy'])->name('test_package.destroy');
+=======
+    Route::get('/test-package/data', [AlatBahanController::class, 'getData'])->name('test_package.data');
+    Route::get('/test-package/create', [AlatBahanController::class, 'create'])->name('test_package.create');
+    Route::post('/test-package', [AlatBahanController::class, 'store'])->name('test_package.store');
+    Route::get('/test-package/{id}/edit', [AlatBahanController::class, 'edit'])->name('test_package.edit');
+    Route::put('/test-package/{id}', [AlatBahanController::class, 'update'])->name('test_package.update');
+    Route::delete('/test-package/{id}', [AlatBahanController::class, 'destroy'])->name('test_package.destroy');
+});
+
+Route::middleware(['auth'])->group(function () {
+
+    // =====================================================================
+    // RUTE UNTUK HALAMAN UTAMA SETIAP MODUL (DINAMIS)
+    // =====================================================================
+    // Ini menangani URL seperti /modul/xrd, /modul/sem-edx, dll.
+    Route::get('/modul/{module:code}', [ModuleController::class, 'show'])->name('module.show');
+    Route::get('/modul/{module:code}/data', [ModuleController::class, 'data'])->name('module.data');
+
+
+    // =====================================================================
+    // RUTE "PINTAR" UNTUK MENGARAHKAN KE WIZARD YANG TEPAT
+    // =====================================================================
+    // Ini adalah "gerbang" yang akan diakses oleh tombol [Lihat Detail]
+    Route::get('/wizard/dispatch/{test}', [WizardDispatcherController::class, 'dispatch'])->name('wizard.dispatcher');
+
+
+    // =====================================================================
+    // RUTE UNTUK WIZARD 1: PENGAJUAN & PENGIRIMAN SAMPEL
+    // =====================================================================
+    Route::prefix('pengajuan')->name('wizard.submission.')->group(function () {
+        Route::get('/create/{module:code}', [SubmissionWizardController::class, 'create'])->name('create'); // Untuk tombol [+ Ajukan Pengujian Baru]
+        Route::post('/store', [SubmissionWizardController::class, 'store'])->name('store'); // Menyimpan pengajuan awal
+        Route::get('/{test}', [SubmissionWizardController::class, 'show'])->name('show');
+        Route::post('/{test}/action', [SubmissionWizardController::class, 'approveOrReject'])->name('action');
+        Route::post('/{test}/store-sample', [SubmissionWizardController::class, 'storeSampleDetails'])->name('storeSample');
+        Route::post('/{test}/confirm-receipt', [SubmissionWizardController::class, 'confirmReceipt'])->name('confirmReceipt');
+    });
+
+
+    // =====================================================================
+    // RUTE UNTUK WIZARD 2: PELACAKAN PENGUJIAN & VERIFIKASI
+    // =====================================================================
+    Route::prefix('pelacakan')->name('wizard.tracking.')->group(function () {
+        Route::get('/{test}', [TestingTrackerController::class, 'show'])->name('show');
+        Route::post('/{test}/upload-result', [TestingTrackerController::class, 'uploadResult'])->name('upload');
+        Route::post('/{test}/verify-result', [TestingTrackerController::class, 'verifyResult'])->name('verify');
+    });
+
+
+    // =====================================================================
+    // RUTE UNTUK WIZARD 3: PEMBAYARAN & PENYELESAIAN
+    // =====================================================================
+    Route::prefix('pembayaran')->name('wizard.payment.')->group(function () {
+        Route::get('/{test}', [PaymentWizardController::class, 'show'])->name('show');
+        Route::post('/{test}/confirm', [PaymentWizardController::class, 'confirmPayment'])->name('confirm');
+        Route::post('/{test}/complete', [PaymentWizardController::class, 'completeOrder'])->name('complete');
+    });
+
+    Route::prefix('hasil-uji')->name('hasil_uji.')->group(function () {
+        Route::get('/', [HasilUjiController::class, 'index'])->name('index');
+        Route::get('/data', [HasilUjiController::class, 'data'])->name('data');
+    });
+>>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
 });
