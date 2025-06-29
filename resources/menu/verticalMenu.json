@@ -20,7 +20,6 @@
     },
     {
       "url": "/module",
-<<<<<<< HEAD
       "name": "Data Modul",
       "icon": "menu-icon tf-icons ti ti-flask-2",
       "slug": "data-institusi-mitra"
@@ -30,17 +29,6 @@
       "name": "Paket Pengujian",
       "icon": "menu-icon tf-icons ti ti-folder-dollar",
       "slug": "data-institusi-mitra"
-=======
-      "name": "Data Module",
-      "icon": "menu-icon tf-icons ti ti-flask-2",
-      "slug": "data-module"
-    },
-    {
-      "url": "/test_package",
-      "name": "Data Paket Pengujian",
-      "icon": "menu-icon tf-icons ti ti-package",
-      "slug": "data-test-package"
->>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
     },
     {
       "menuHeader": "Data Inventori"

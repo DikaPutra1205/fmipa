@@ -25,7 +25,7 @@ class MitraController extends Controller
         }
 
         // Ambil kolom yang dibutuhkan
-        $data->select(['id','institution', 'name', 'email','phone','is_active']);
+        $data->select(['id', 'institution', 'name', 'email', 'phone', 'is_active']);
 
         // Jika admin, tambahkan kolom aksi
         if ($user->role === 'admin') {
@@ -75,28 +75,32 @@ class MitraController extends Controller
     }
     public function store(Request $request)
     {
-        // Validasi data yang masuk dari form
-        $request->validate([
+        // Validasi input
+        $validated = $request->validate([
             'institution' => 'required|string|max:255',
-            'name' => 'nullable|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email', // Email harus unik di tabel 'users'
-            'password' => 'required|string|min:8',
-            'phone' => 'nullable|string|max:20', // Perhatikan nama input 'phone'
-            'is_active' => 'required|boolean', // Perhatikan nama input 'is_active'
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'phone' => 'nullable|string',
+            'is_active' => 'required|in:0,1',
+        ], [
+            'email.unique' => 'Email ini sudah digunakan. Silakan gunakan email lain.',
         ]);
 
-        // Buat user baru di database
+        // Simpan ke DB
         User::create([
-            'institution' => $request->institution,
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'mitra', // field role default
-            'phone' => $request->phone,
-            'is_active' => $request->is_active,
+            'institution' => $validated['institution'],
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => bcrypt($validated['password']),
+            'phone' => $validated['phone'],
+            'is_active' => $validated['is_active'],
+            'role' => 'mitra', // <== jangan lupa role mitra jika perlu
         ]);
-        return redirect()->route('mitra.dashboard')->with('success', 'Data Mitra berhasil ditambahkan!');
+
+        return redirect()->route('mitra.dashboard')->with('success', 'Mitra berhasil ditambahkan');
     }
+
 
 
     public function destroy($id)
@@ -114,7 +118,7 @@ class MitraController extends Controller
 
     public function edit($id)
     {
-       // Hanya admin boleh hapus
+        // Hanya admin boleh hapus
         if (Auth::user()->role !== 'admin') {
             return response()->json(['success' => false, 'message' => 'Unauthorized. Anda tidak memiliki akses untuk menghapus user.'], 403);
         }
@@ -124,18 +128,13 @@ class MitraController extends Controller
     }
     public function update(Request $request, $id)
     {
-        // Opsional: Pastikan hanya admin yang bisa mengakses ini
-        // if (Auth::user()->role !== 'admin') {
-        //     abort(403, 'Unauthorized.');
-        // }
-
         $user = User::findOrFail($id); // Temukan user yang akan diupdate
 
         // Validasi data yang masuk
         $request->validate([
             'institution' => 'required|string|max:255',
             'name' => 'nullable|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id, 
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
             'password' => 'nullable|string|min:8', // Password opsional saat edit
             'phone' => 'nullable|string|max:20',
             'is_active' => 'required|boolean',

@@ -43,7 +43,7 @@
         </div>
         <div class="card-body">
             {{-- Form action mengarah ke rute update dengan ID layanan --}}
-            <form action="{{ route('services.update', $service->id) }}" method="POST">
+            <form action="{{ route('test_package.update', $testPackage->id) }}" method="POST">
                 @csrf {{-- Token CSRF untuk keamanan --}}
                 @method('PUT') {{-- Metode HTTP PUT untuk update --}}
 
@@ -51,7 +51,7 @@
                 <div class="mb-6">
                     <label class="form-label" for="module_id">ID Modul</label>
                     <input type="number" class="form-control" id="module_id" name="module_id"
-                           placeholder="Contoh: 1" value="{{ old('module_id', $service->module_id) }}" required min="1" />
+                           placeholder="Contoh: 1" value="{{ old('module_id', $testPackage->module_id) }}" required min="1" />
                     @error('module_id')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -61,7 +61,7 @@
                 <div class="mb-6">
                     <label class="form-label" for="name">Nama Layanan</label>
                     <input type="text" class="form-control" id="name" name="name"
-                           placeholder="Contoh: Pengujian Saja, Pengujian + Analisis" value="{{ old('name', $service->name) }}" required />
+                           placeholder="Contoh: Pengujian Saja, Pengujian + Analisis" value="{{ old('name', $testPackage->name) }}" required />
                     @error('name')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
@@ -71,7 +71,7 @@
                 <div class="mb-6">
                     <label class="form-label" for="price">Harga (Rp)</label>
                     <input type="number" class="form-control" id="price" name="price"
-                           placeholder="Contoh: 250000" value="{{ old('price', $service->price) }}" required min="0" step="0.01" />
+                           placeholder="Contoh: 250000" value="{{ old('price', $testPackage->price) }}" required min="0" step="0.01" />
                     @error('price')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror

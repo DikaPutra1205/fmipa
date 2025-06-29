@@ -21,15 +21,12 @@ class Module extends Model
     {
         return $this->hasMany(Test::class);
     }
-<<<<<<< HEAD
     public function services()
     {
         return $this->hasMany(TestPackage::class);
     }
-=======
 
     protected $casts = [
         'details' => 'array',
     ];
->>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
 }

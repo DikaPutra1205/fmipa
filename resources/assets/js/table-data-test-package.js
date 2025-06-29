@@ -1,26 +1,17 @@
-<<<<<<< HEAD
-/**
- * DataTables for Service Data (Test Package)
- */
-
 'use strict';
 
-$(function () {
-  // A. LOGIKA UNTUK MENAMPILKAN DATA DI DATATABLES
-  let dt_service_table = $('.datatables-ajax');
-  let serviceTable; // Deklarasikan variabel untuk instance DataTables
+document.addEventListener('DOMContentLoaded', function () {
+  let dtServiceTable = $('.datatables-ajax');
+  let serviceTable;
 
-  // Definisi kolom DataTables
+  // Definisi kolom
   let columns = [
-    { data: 'id' }, // Kolom ID, akan diubah menjadi nomor urut
-    { data: 'module.name', name: 'module.name' }, // <--- UBAH DI SINI: Mengambil nama modul
-    { data: 'name', name: 'name' },         // Kolom 'name' dari model Service
-    { data: 'price', name: 'price' },       // Kolom 'price' dari model Service
-    { data: 'created_at', name: 'created_at' }, // Kolom 'created_at' dari model Service
-    { data: 'updated_at', name: 'updated_at' }  // Kolom 'updated_at' dari model Service
+    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+    { data: 'module', name: 'module.name' },
+    { data: 'name', name: 'name' },
+    { data: 'price', name: 'price' },
   ];
 
-  // Tambahkan kolom aksi jika login sebagai admin
   if (window.userRole === 'admin') {
     columns.push({
       data: 'aksi',
@@ -30,301 +21,107 @@ $(function () {
   }
 
   // Inisialisasi DataTables
-  if (dt_service_table.length) {
-    serviceTable = dt_service_table.DataTable({
+  if (dtServiceTable.length) {
+    window.testPackageTable = dtServiceTable.DataTable({
       processing: true,
       serverSide: true,
-      ajax: window.routes.getServiceData, // Gunakan URL dari window.routes (test_package.data)
+      ajax: window.routes.getTestPackageData,
       columns: columns,
-      columnDefs: [
-        {
-          // Untuk nomor urut (No)
-          targets: 0,
-          render: function (data, type, row, meta) {
-            return meta.row + meta.settings._iDisplayStart + 1;
-          }
-        },
-        {
-          // Formatting Harga
-          targets: 3,
-          render: function (data, type, row) {
-            return 'Rp ' + new Intl.NumberFormat('id-ID').format(data);
-          }
-        },
-        {
-          // Formatting Tanggal Dibuat
-          targets: 4,
-          render: function (data, type, row) {
-            return moment(data).format('DD MMMMYYYY HH:mm');
-          }
-        },
-        {
-          // Formatting Tanggal Diperbarui
-          targets: 5,
-          render: function (data, type, row) {
-            return moment(data).format('DD MMMMYYYY HH:mm');
-          }
-        },
-        // Sembunyikan kolom "Aksi" jika user bukan admin
-        {
-          targets: -1, // Target kolom terakhir (Aksi)
-          visible: window.userRole === 'admin' // Hanya tampilkan jika role adalah 'admin'
-        }
-      ],
-      order: [[0, 'asc']], // Urutkan berdasarkan kolom No secara ascending
+      order: [[0, 'asc']],
       dom:
         '<"row mx-2"' +
-        '<"col-md-2"<"me-3"l>>' +
-        '<"col-md-10"<"dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-end flex-md-row flex-column mb-3 mb-md-0"fB>>' +
-        '>t' +
+        '<"col-md-2"l>' +
+        '<"col-md-10 text-end"fB>>t' +
         '<"row mx-2"' +
         '<"col-sm-12 col-md-6"i>' +
-        '<"col-sm-12 col-md-6"p>' +
-        '>',
+        '<"col-sm-12 col-md-6"p>>',
       responsive: {
         details: {
           display: $.fn.dataTable.Responsive.display.modal({
-            header: function (row) {
-              let data = row.data();
-              return 'Detail Data Layanan ' + data['name'];
-            }
+            header: (row) => 'Detail Paket ' + row.data().name
           }),
-          type: 'column',
-          renderer: function (api, rowIdx, columns) {
-            let data = $.map(columns, function (col, i) {
-              // Exclude the "Aksi" column from details if it exists
-              if (col.columnIndex === (columns.length - 1) && window.userRole === 'admin') {
-                return ''; // Skip "Aksi" column
-              }
-              return '<tr data-dt-row="' +
-                col.rowIndex +
-                '" data-dt-column="' +
-                col.columnIndex +
-                '">' +
-                '<td>' +
-                col.title +
-                ':' +
-                '</td> ' +
-                '<td>' +
-                col.data +
-                '</td>' +
-                '</tr>';
-            }).join('');
-
-            return data ? $('<table class="table"/><tbody />').append(data) : false;
+          renderer: (api, rowIdx, columns) => {
+            return $('<table class="table"/>')
+              .append(
+                $('<tbody/>').append(
+                  columns
+                    .filter(col => !(col.columnIndex === columns.length - 1 && window.userRole === 'admin'))
+                    .map(col =>
+                      `<tr data-dt-row="${col.rowIndex}" data-dt-column="${col.columnIndex}">
+                          <td>${col.title}</td><td>${col.data}</td>
+                       </tr>`
+                    )
+                    .join('')
+                )
+              );
           }
         }
       }
     });
   }
 
-  // B. LOGIKA UNTUK MODAL KONFIRMASI HAPUS
+  // Modal Hapus
   const deleteConfirmationModal = document.getElementById('deleteConfirmationModal');
   const btnConfirmDelete = document.getElementById('btnConfirmDelete');
-  const modalServiceNameSpan = document.getElementById('modalServiceName');
-  const modalServiceIdSpan = document.getElementById('modalServiceId');
+  const modalDeleteNameSpan = document.getElementById('modalDeleteName');
+  const modalDeleteIdSpan = document.getElementById('modalDeleteId');
 
-  // --- DEBUGGING AWAL ---
-  console.log('Element deleteConfirmationModal:', deleteConfirmationModal);
-  console.log('Element btnConfirmDelete:', btnConfirmDelete);
-  console.log('Element modalServiceNameSpan:', modalServiceNameSpan);
-  console.log('Element modalServiceIdSpan:', modalServiceIdSpan);
-  // --- AKHIR DEBUGGING AWAL ---
+  let currentTestPackageIdToDelete = null;
 
-  if (!deleteConfirmationModal || !btnConfirmDelete || !modalServiceNameSpan || !modalServiceIdSpan) {
-    console.error('Salah satu elemen modal konfirmasi hapus tidak ditemukan. Pastikan ID HTML sudah benar.');
-    // Tidak menghentikan eksekusi, hanya mencatat error
+  if (!deleteConfirmationModal || !btnConfirmDelete || !modalDeleteNameSpan || !modalDeleteIdSpan) {
+    console.error('ERROR: Salah satu elemen modal tidak ditemukan. Periksa ID elemen modal.');
+    return;
   }
 
-  let currentServiceIdToDelete = null; // Variabel untuk menyimpan ID layanan yang akan dihapus
+  // Saat modal akan muncul
+  deleteConfirmationModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
 
-  // Event listener saat tombol hapus di DataTables diklik
-  dt_service_table.on('click', '.btn-delete-service', function () {
-    currentServiceIdToDelete = $(this).data('id');
-    // Ambil nama layanan dari kolom ke-3 (index 2) dari baris yang diklik
-    let serviceName = $(this).closest('tr').find('td:eq(2)').text();
+    const id = button.getAttribute('data-id');
+    const name = button.getAttribute('data-name'); // atau data-test-package-name, sesuaikan
 
-    if (modalServiceIdSpan && modalServiceNameSpan) {
-      modalServiceIdSpan.textContent = currentServiceIdToDelete;
-      modalServiceNameSpan.textContent = serviceName;
-    }
+    modalDeleteNameSpan.textContent = name;
+    modalDeleteIdSpan.textContent = id;
 
-    // Tampilkan modal
-    if (deleteConfirmationModal) {
-      const modalInstance = new bootstrap.Modal(deleteConfirmationModal);
-      modalInstance.show();
-    }
-
-    console.log('Modal dibuka untuk layanan ID:', currentServiceIdToDelete, 'Nama:', serviceName); // DEBUGGING
+    currentTestPackageIdToDelete = id;
   });
 
-  // Event listener saat tombol "Hapus Data" di dalam modal diklik
-  if (btnConfirmDelete) {
-    btnConfirmDelete.addEventListener('click', function () {
-      console.log('Tombol Hapus Data di dalam modal diklik!'); // DEBUGGING: Konfirmasi klik
-      const id = currentServiceIdToDelete; // Gunakan ID yang disimpan dari event sebelumnya
-      console.log('ID layanan yang akan dihapus:', id); // DEBUGGING: Tampilkan ID
-      console.log('CSRF Token yang akan dikirim:', window.routes.csrfToken); // DEBUGGING: Pastikan token ada
+  // Saat klik tombol konfirmasi hapus
+  btnConfirmDelete.addEventListener('click', function () {
+    if (!currentTestPackageIdToDelete) return;
 
-      if (!id) {
-        toastr.error('ID layanan tidak ditemukan untuk dihapus.', 'Error!');
-        return;
+    fetch(`${window.routes.deleteTestPackage}/${currentTestPackageIdToDelete}`, {
+      method: 'DELETE',
+      headers: {
+        'X-CSRF-TOKEN': window.routes.csrfToken,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
       }
+    })
+      .then(res => {
+        if (!res.ok) {
+          return res.json().then(err => {
+            throw new Error(err.message || 'Gagal menghapus data.');
+          });
+        }
+        return res.json();
+      })
+      .then(data => {
+        const modalInstance = bootstrap.Modal.getInstance(deleteConfirmationModal);
+        modalInstance.hide();
 
-      fetch(window.routes.deleteService + '/' + id, {
-        method: 'DELETE',
-        headers: {
-          'X-CSRF-TOKEN': window.routes.csrfToken, // Gunakan variabel global
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
+        alert(data.message || 'Data berhasil dihapus.');
+
+        if (window.testPackageTable) {
+          window.testPackageTable.ajax.reload(null, false);
         }
       })
-        .then(res => {
-          if (!res.ok) {
-            return res.json().then(errorData => {
-              throw new Error(errorData.message || 'Gagal menghapus data.');
-            });
-          }
-          return res.json();
-        })
-        .then(data => {
-          const modalInstance = bootstrap.Modal.getInstance(deleteConfirmationModal);
-          if (modalInstance) {
-            modalInstance.hide(); // Sembunyikan modal setelah berhasil
-          }
-          // Menggunakan Toastr untuk notifikasi
-          toastr.success(data.message || 'Data berhasil dihapus.', 'Berhasil!', {
-            closeButton: true,
-            tapToDismiss: false,
-            progressBar: true
-          });
-          if (serviceTable) {
-            serviceTable.ajax.reload(null, false); // Reload DataTables
-          }
-        })
-        .catch(error => {
-          const modalInstance = bootstrap.Modal.getInstance(deleteConfirmationModal);
-          if (modalInstance) {
-            modalInstance.hide(); // Sembunyikan modal jika ada error juga
-          }
-          // Menggunakan Toastr untuk notifikasi error
-          toastr.error(error.message || 'Terjadi kesalahan saat menghapus data layanan.', 'Error!', {
-            closeButton: true,
-            tapToDismiss: false,
-            progressBar: true
-          });
-          console.error('Error deleting service:', error);
-        });
-    });
-  }
-=======
-document.addEventListener('DOMContentLoaded', function () {
-    // A. LOGIKA UNTUK MENAMPILKAN DATA DI DATATABLES
-    let columns = [
-        { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-        { data: 'module_id', name: 'module_id' },
-        { data: 'name', name: 'name' },
-        { data: 'price', name: 'price' },
-    ];
+      .catch(err => {
+        const modalInstance = bootstrap.Modal.getInstance(deleteConfirmationModal);
+        modalInstance.hide();
 
-    // Tambahkan kolom aksi jika user login sebagai admin
-    if (window.userRole === 'admin') {
-        columns.push({
-            data: 'aksi',
-            orderable: false,
-            searchable: false
-        });
-    }
-
-    // Inisialisasi DataTables
-    window.alatBahanTable = $('.datatables-ajax').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: window.routes.getTestPackageData, // Mengambil URL dari window.routes
-        columns: columns
-    });
-
-    // B. LOGIKA UNTUK MODAL KONFIRMASI HAPUS
-    const deleteConfirmationModal = document.getElementById('deleteConfirmationModal');
-    const btnConfirmDelete = document.getElementById('btnConfirmDelete');
-    const modalTestPackageNameSpan = document.getElementById('modalAlatBahanName');
-    const modalTestPackageIdSpan = document.getElementById('modalAlatBahanId');
-
-    // --- DEBUGGING AWAL: Memastikan semua elemen ditemukan ---
-    console.log('Modal element:', deleteConfirmationModal);
-    console.log('Confirm delete button:', btnConfirmDelete);
-    console.log('Paket Pengujian Name Span in modal:', modalTestPackageNameSpan);
-    console.log('Paket Pengujian ID Span in modal:', modalTestPackageIdSpan);
-    // --- AKHIR DEBUGGING AWAL ---
-
-    if (!deleteConfirmationModal || !btnConfirmDelete || !modalTestPackageNameSpan || !modalTestPackageIdSpan) {
-        console.error('ERROR: Salah satu elemen modal konfirmasi hapus untuk Paket Pengujian tidak ditemukan. Pastikan ID HTML sudah benar.');
-        return;
-    }
-
-    let currentTestPackageIdToDelete = null;
-
-    // Event listener saat modal akan ditampilkan (dipicu oleh Bootstrap secara otomatis)
-    deleteConfirmationModal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget; // Tombol yang memicu modal (yaitu tombol "Hapus" di DataTables)
-        currentTestPackageIdToDelete = button.getAttribute('data-id'); // Ambil ID paket dari tombol
-        const alatBahanName = button.getAttribute('data-test-package-name'); // Ambil nama paket dari tombol
-
-        // Isi konten modal dengan informasi paket
-        modalTestPackageNameSpan.textContent = alatBahanName;
-        modalTestPackageIdSpan.textContent = currentTestPackageIdToDelete;
-
-        // Atur ID paket yang akan dihapus pada tombol konfirmasi di modal
-        btnConfirmDelete.setAttribute('data-id', currentTestPackageIdToDelete);
-
-        console.log('Modal dibuka untuk Paket ID:', currentTestPackageIdToDelete, 'Nama:', alatBahanName); // DEBUGGING
-    });
-
-    // Event listener saat tombol "Hapus Data" di dalam modal diklik
-    btnConfirmDelete.addEventListener('click', function() {
-        console.log('Tombol Hapus Data di dalam modal diklik!'); // DEBUGGING: Konfirmasi klik
-        const id = this.getAttribute('data-id'); // Ambil ID dari tombol konfirmasi modal
-        console.log('ID paket yang akan dihapus:', id); // DEBUGGING: Tampilkan ID
-        console.log('CSRF Token yang akan dikirim:', window.routes.csrfToken); // DEBUGGING: Pastikan token ada
-
-        fetch(window.routes.deleteAlatBahan + '/' + id, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': window.routes.csrfToken, // Menggunakan CSRF token dari window.routes
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(res => {
-            if (!res.ok) {
-                // Jika respons bukan 2xx (misal 403, 500), baca pesan error dari JSON respons
-                return res.json().then(errorData => {
-                    throw new Error(errorData.message || 'Gagal menghapus data Paket Pengujian.');
-                });
-            }
-            return res.json(); // Jika respons OK, parse JSON
-        })
-        .then(data => {
-            // Sembunyikan modal setelah berhasil
-            const modalInstance = bootstrap.Modal.getInstance(deleteConfirmationModal);
-            if (modalInstance) {
-                modalInstance.hide();
-            }
-            alert(data.message || 'Data Paket Pengujian berhasil dihapus.');
-            // Reload DataTables
-            if (window.alatBahanTable) {
-                window.alatBahanTable.ajax.reload(null, false); // `false` agar tidak kembali ke halaman 1
-            }
-        })
-        .catch(error => {
-            // Sembunyikan modal jika ada error juga
-            const modalInstance = bootstrap.Modal.getInstance(deleteConfirmationModal);
-            if (modalInstance) {
-                modalInstance.hide();
-            }
-            alert('Error: ' + error.message);
-            console.error('Error deleting Paket Pengujian:', error);
-        });
-    });
->>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
+        alert('Error: ' + err.message);
+        console.error(err);
+      });
+  });
 });

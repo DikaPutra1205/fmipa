@@ -87,10 +87,7 @@ class SampelMaterialController extends Controller
      */
     public function create(): View
     {
-<<<<<<< HEAD
-=======
-        $this->authorize('admin'); // Asumsi hanya admin yang bisa menambah manual
->>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
+        $this->authorize('admin');
         return view('sample_material.create');
     }
 
@@ -99,27 +96,15 @@ class SampelMaterialController extends Controller
      */
     public function store(Request $request)
     {
-<<<<<<< HEAD
-=======
         $this->authorize('admin');
-
->>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
         $request->validate([
             'nama_sampel_material' => 'required|string|max:255',
             'jumlah_sampel' => 'required|integer|min:1',
             'status' => 'required|in:menunggu_kedatangan,diterima_di_lab,sedang_diuji,pengujian_selesai,selesai',
             'tanggal_penerimaan' => 'nullable|date',
         ]);
-<<<<<<< HEAD
         SampelMaterial::create($request->all());
         return redirect()->route('sample_material.dashboard')->with('success', 'Data sampel & material berhasil ditambahkan!');
-=======
-
-        // Membuat record baru. `test_id` akan otomatis NULL karena tidak ada di form.
-        SampelMaterial::create($request->all());
-
-        return redirect()->route('sample_material.dashboard')->with('success', 'Data sampel manual berhasil ditambahkan!');
->>>>>>> 54fc28c97a01a4fe81a73442c202a03518b42b17
     }
     
     /**

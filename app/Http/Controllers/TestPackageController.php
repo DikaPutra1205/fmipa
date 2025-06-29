@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Module;
 use App\Models\TestPackage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,14 +12,13 @@ class TestPackageController extends Controller
 {
     public function index()
     {
-        
+
         return view('test_package.dashboard');
     }
 
     public function getData(Request $request)
     {
-        // Mengambil semua data dari model TestPackage.
-        $data = TestPackage::query();
+        $data = TestPackage::with('module');
 
         // Mendapatkan user yang sedang login untuk pengecekan role.
         $user = Auth::user();
@@ -26,6 +26,9 @@ class TestPackageController extends Controller
         // Menggunakan Yajra DataTables untuk memproses data.
         return DataTables::of($data)
             ->addIndexColumn()
+            ->addColumn('module', function ($row) {
+                return $row->module ? $row->module->name : '-';
+            })
             ->addColumn('aksi', function ($row) use ($user) { // Melewatkan $user ke dalam closure.
                 $buttons = '';
                 // Tombol aksi (edit dan hapus) hanya ditampilkan jika user adalah 'admin'.
@@ -41,10 +44,10 @@ class TestPackageController extends Controller
                                 <path d="M18 3l3 3" />
                             </svg>
                         </a>
-                        <button type="button" class="btn btn-sm btn-icon btn-danger btn-delete-alat-bahan"
+                        <button type="button" class="btn btn-sm btn-icon btn-danger btn-delete-test-package"
                                 data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal"
                                 data-id="' . $row->id . '"
-                                data-alat-bahan-name="' . htmlspecialchars($row->nama_test_package) . '" title="Hapus">
+                                data-test-package-name="' . htmlspecialchars($row->nama_test_package) . '" title="Hapus">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                 <path d="M4 7l16 0" />
@@ -64,8 +67,8 @@ class TestPackageController extends Controller
 
     public function create()
     {
-       
-        return view('test_package.create');
+        $modules = Module::all();
+        return view('test_package.create', compact('modules'));
     }
 
     public function store(Request $request)
@@ -90,9 +93,10 @@ class TestPackageController extends Controller
         }
 
         // Mencari data TestPackage berdasarkan ID atau menampilkan error 404 jika tidak ditemukan.
-        $TestPackage = TestPackage::findOrFail($id);
+        $testPackage = TestPackage::findOrFail($id);
+        $modules = \App\Models\Module::all();
 
-        return view('test_package.edit', compact('TestPackage'));
+        return view('test_package.edit', compact('testPackage', 'modules'));
     }
 
     public function update(Request $request, $id)
@@ -103,7 +107,7 @@ class TestPackageController extends Controller
         }
 
         // Mencari data TestPackage yang akan diupdate.
-        $TestPackage = TestPackage::findOrFail($id);
+        $testPackage = TestPackage::findOrFail($id);
 
         // Memvalidasi data yang masuk dari form update.
         $request->validate([
@@ -113,7 +117,7 @@ class TestPackageController extends Controller
         ]);
 
         // Memperbarui record di database dengan data baru dari request.
-        $TestPackage->update($request->all());
+        $testPackage->update($request->all());
 
         // Mengalihkan user kembali ke halaman dashboard dengan pesan sukses.
         return redirect()->route('test_package.dashboard')->with('success', 'Data Paket Pengujian berhasil diperbarui!');
@@ -128,9 +132,9 @@ class TestPackageController extends Controller
         }
 
         // Mencari data TestPackage yang akan dihapus.
-        $TestPackage = TestPackage::findOrFail($id);
+        $testPackage = TestPackage::findOrFail($id);
         // Menghapus record dari database.
-        $TestPackage->delete();
+        $testPackage->delete();
 
         // Mengembalikan respons JSON dengan pesan sukses.
         return response()->json(['success' => true, 'message' => 'Data Paket Pengujian berhasil dihapus.']);

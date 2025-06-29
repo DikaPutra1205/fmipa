@@ -23,25 +23,30 @@
 
 <!-- Page Scripts -->
 @section('page-script')
-@vite(['resources/assets/js/form-layouts.js']) {{-- Pastikan form-layouts.js menginisialisasi cleave.js/select2 --}}
+@vite(['resources/assets/js/form-layouts.js'])
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Inisialisasi Cleave.js untuk input nomor telepon
-        // Pastikan form-layouts.js atau script lain belum menginisialisasinya
         if (typeof Cleave !== 'undefined') {
             new Cleave('.phone-mask', {
                 phone: true,
-                phoneRegionCode: 'ID' // Contoh untuk format nomor telepon Indonesia
+                phoneRegionCode: 'ID'
             });
         }
-
-        // Inisialisasi Select2 (jika diperlukan untuk styling dropdown)
-        // $('.select2').select2();
     });
 </script>
 @endsection
 
 @section('content')
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <!-- Form Tambah Data Mitra -->
 <div class="col-xl mb-6">
     <div class="card">
@@ -81,14 +86,13 @@
                 {{-- Input No Telp --}}
                 <div class="mb-6">
                     <label class="form-label" for="no_telp">No. Telepon</label>
-                    {{-- Kelas 'phone-mask' digunakan oleh Cleave.js --}}
                     <input type="text" id="no_telp" name="phone" class="form-control phone-mask" placeholder="Contoh: 0812 3456 7890" />
                 </div>
 
                 {{-- Select Status --}}
                 <div class="mb-6">
-                    <label class="form-label" for="status">Status</label>
-                    <select id="status" name="is_active" class="form-select" required>
+                    <label class="form-label" for="is_active">Status</label>
+                    <select id="is_active" name="is_active" class="form-select" required>
                         <option value="" disabled selected>Pilih Status</option>
                         <option value="1">Aktif</option>
                         <option value="0">Tidak Aktif</option>

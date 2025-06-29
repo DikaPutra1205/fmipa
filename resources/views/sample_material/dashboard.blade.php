@@ -38,8 +38,8 @@ use Illuminate\Support\Facades\Auth;
 
 {{-- [BARU] Tombol Tambah Data Sampel & Material ditambahkan kembali --}}
 @can('admin')
-<div class="d-flex justify-content-end mb-3">
-  <a href="{{ route('sample_material.create') }}" class="btn btn-primary">
+<div class="demo-inline-spacing mb-3">
+  <a href="{{ route('sample_material.create') }}" class="btn btn-primary waves-effect waves-light">
     <span class="ti-xs ti ti-plus me-2"></span>Tambah Sampel Manual
   </a>
 </div>
