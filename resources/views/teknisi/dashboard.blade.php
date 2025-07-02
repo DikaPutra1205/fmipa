@@ -47,9 +47,12 @@ use Illuminate\Support\Facades\Auth;
     <span class="ti-xs ti ti-plus me-2"></span> Tambah Data TA & Teknisi
   </a>
 </div>
+@endcan
 
 
 {{-- Deskripsi Halaman --}}
+
+@can('is-not-mitra')
 
 {{-- Card Data Tenaga Ahli & Teknisi --}}
 <div class="card">

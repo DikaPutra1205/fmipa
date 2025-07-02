@@ -21,7 +21,7 @@ Route::get('/', function () {
     return redirect('/dashboard');
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])
+Route::get('/', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
@@ -80,7 +80,6 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/module', fn() => view('module.dashboard'))->name('module.dashboard');
     Route::get('/module/view', [ModuleController::class, 'getData'])->name('module.view');
-    Route::get('/module/data', [ModuleController::class, 'getData'])->name('module.data');
     Route::get('/module/create', [ModuleController::class, 'create'])->name('module.create');
     Route::post('/module', [ModuleController::class, 'store'])->name('module.store');
     Route::get('/module/{id}/edit', [ModuleController::class, 'edit'])->name('module.edit');

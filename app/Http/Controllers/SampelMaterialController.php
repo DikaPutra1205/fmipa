@@ -33,6 +33,14 @@ class SampelMaterialController extends Controller
         // Mengambil data sampel beserta relasi ke order (test) dan pemilik order (mitra)
         $query = SampelMaterial::with(['test', 'test.mitra']);
 
+        $user = Auth::user();
+
+        // [TAMBAHAN] Logika untuk memfilter data jika yang login adalah Mitra
+        if ($user->role === 'mitra') {
+            $query->whereHas('test', function ($subQuery) use ($user) {
+                $subQuery->where('user_id', $user->id);
+            });
+        }
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('test_id', function ($row) {
@@ -106,7 +114,7 @@ class SampelMaterialController extends Controller
         SampelMaterial::create($request->all());
         return redirect()->route('sample_material.dashboard')->with('success', 'Data sampel & material berhasil ditambahkan!');
     }
-    
+
     /**
      * Menampilkan form untuk mengedit Sampel Material tertentu.
      */
@@ -145,9 +153,9 @@ class SampelMaterialController extends Controller
     public function destroy($id)
     {
         $this->authorize('admin');
-        
+
         $sampelMaterial = SampelMaterial::findOrFail($id);
-        
+
         $sampelMaterial->delete();
         return response()->json(['success' => true, 'message' => 'Data sampel berhasil dihapus.']);
     }

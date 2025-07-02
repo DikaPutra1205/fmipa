@@ -53,13 +53,13 @@ use Illuminate\Support\Facades\Auth;
 
 @section('content')
 
-@can('admin')
+@can('is-not-mitra')
 <div class="demo-inline-spacing mb-3">
   <a href="{{ route('module.create') }}" class="btn btn-primary waves-effect waves-light">
     <span class="ti-xs ti ti-plus me-2"></span> Tambah Data Modul
   </a>
 </div>
-@endcan
+
 
 <div class="card">
   <h5 class="card-header">Data Modul</h5>
@@ -100,4 +100,5 @@ use Illuminate\Support\Facades\Auth;
     </div>
   </div>
 </div>
+@endcan
 @endsection

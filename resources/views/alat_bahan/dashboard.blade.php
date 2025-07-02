@@ -42,7 +42,7 @@ use Illuminate\Support\Facades\Auth;
 
 @section('content')
 
-@can('admin')
+@can('is-not-mitra')
 {{-- Button Tambah Data Alat & Bahan --}}
 <div class="demo-inline-spacing mb-3">
   <a href="{{ route('alat_bahan.create') }}" class="btn btn-primary waves-effect waves-light">

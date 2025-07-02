@@ -42,7 +42,7 @@ use Illuminate\Support\Facades\Auth;
 
 @section('content')
 
-@can('admin')
+@can('is-not-mitra')
 {{-- Button Tambah Data Paket Pengujian --}}
 <div class="demo-inline-spacing mb-3">
   <a href="{{ route('test_package.create') }}" class="btn btn-primary waves-effect waves-light">
@@ -50,6 +50,7 @@ use Illuminate\Support\Facades\Auth;
   </a>
 </div>
 @endcan
+
 
 {{-- Deskripsi Halaman --}}
 

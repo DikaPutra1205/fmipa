@@ -10,25 +10,29 @@
       "url": "/teknisi",
       "name": "Data TA & Teknisi",
       "icon": "menu-icon tf-icons ti ti-school",
-      "slug": "data-ta-teknisi"
+      "slug": "data-ta-teknisi",
+      "roles": ["admin", "teknisi_lab", "tenaga_ahli"]
     },
     {
       "url": "/mitra",
       "name": "Data Institusi & Mitra",
       "icon": "menu-icon tf-icons ti ti-building-bank",
-      "slug": "data-institusi-mitra"
+      "slug": "data-institusi-mitra",
+      "roles": ["admin", "teknisi_lab", "tenaga_ahli"]
     },
     {
       "url": "/module",
       "name": "Data Modul",
       "icon": "menu-icon tf-icons ti ti-flask-2",
-      "slug": "data-institusi-mitra"
+      "slug": "data-institusi-mitra",
+      "roles": ["admin", "teknisi_lab", "tenaga_ahli"]
     },
     {
       "url": "/test_package",
       "name": "Paket Pengujian",
       "icon": "menu-icon tf-icons ti ti-folder-dollar",
-      "slug": "data-institusi-mitra"
+      "slug": "data-institusi-mitra",
+      "roles": ["admin", "teknisi_lab", "tenaga_ahli"]
     },
     {
       "menuHeader": "Data Inventori"
@@ -44,7 +48,7 @@
       "slug": "sample-material"
     },
     {
-      "menuHeader": "Hasil Uji Material"
+      "menuHeader": "Uji Material"
     },
     {
       "url": "modul/xrd",

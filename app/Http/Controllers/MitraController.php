@@ -25,7 +25,7 @@ class MitraController extends Controller
         }
 
         // Ambil kolom yang dibutuhkan
-        $data->select(['id', 'institution', 'name', 'email', 'phone', 'is_active']);
+        $data->select(['id', 'institution', 'coordinator_name', 'email', 'phone', 'is_active']);
 
         // Jika admin, tambahkan kolom aksi
         if ($user->role === 'admin') {

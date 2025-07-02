@@ -51,6 +51,7 @@ use Illuminate\Support\Facades\Auth;
 
 {{-- Deskripsi Halaman --}}
 
+@can('is-not-mitra')
 {{-- Card Data Mitra --}}
 <div class="card">
   <h5 class="card-header">Data Mitra</h5>
@@ -92,4 +93,5 @@ use Illuminate\Support\Facades\Auth;
     </div>
   </div>
 </div>
+@endcan
 @endsection

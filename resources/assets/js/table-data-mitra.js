@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let columns = [
         { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
         { data: 'institution', name: 'institution' },
-        { data: 'name', name: 'name' },
+        { data: 'coordinator_name', name: 'coordinator_name' },
         { data: 'email', name: 'email' },
         { data: 'phone', name: 'phone' },
         { data: 'is_active', name: 'is_active' }
@@ -57,4 +57,3 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 });
-

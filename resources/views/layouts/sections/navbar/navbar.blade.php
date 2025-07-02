@@ -126,14 +126,6 @@ $navbarDetached = ($navbarDetached ?? '');
               <li>
                 <div class="dropdown-divider my-1 mx-n2"></div>
               </li>
-              <li>
-                <a class="dropdown-item" href="{{ Route::has('profile.show') ? route('profile.show') : url('pages/profile-user') }}">
-                  <i class="ti ti-user me-3 ti-md"></i><span class="align-middle">My Profile</span>
-                </a>
-              </li>
-              <li>
-                <div class="dropdown-divider my-1 mx-n2"></div>
-              </li>
               @if (Auth::check())
               <li>
                 <div class="d-grid px-2 pt-2 pb-1">

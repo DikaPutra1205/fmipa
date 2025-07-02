@@ -39,7 +39,7 @@ class AuthServiceProvider extends ServiceProvider
         // =====================================================================
         // DEFINISI GATE SPESIFIK UNTUK ROLE LAIN
         // =====================================================================
-        
+
         // Gate untuk melihat detail sebuah order pengujian
         Gate::define('view', function (User $user, Test $test) {
             // Karena admin sudah di-handle oleh Gate::before, kita hanya perlu cek role lain
@@ -86,6 +86,10 @@ class AuthServiceProvider extends ServiceProvider
         // Gate 'isAdmin' dari file Anda yang lain. Berguna untuk pengecekan umum.
         Gate::define('isAdmin', function ($user) {
             return $user->role === 'admin';
+        });
+
+        Gate::define('is-not-mitra', function (User $user) {
+            return $user->role !== 'mitra';
         });
     }
 }
