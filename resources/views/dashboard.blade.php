@@ -119,7 +119,95 @@ $customizerHidden = 'customizer-hide';
   </ul>
 
 </aside>
-
+@section('content')
+{{-- List --}}
+<div class="row g-6 mb-6">
+  <div class="col-sm-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex align-items-start justify-content-between">
+          <div class="content-left">
+            <span class="text-heading">Semua Pengguna</span>
+            <div class="d-flex align-items-center my-1">
+              <h4 class="mb-0 me-2">21,459</h4>
+              <p class="text-success mb-0">(+29%)</p>
+            </div>
+            <small class="mb-0">Total Pengguna</small>
+          </div>
+          <div class="avatar">
+            <span class="avatar-initial rounded bg-label-primary">
+              <i class="ti ti-users ti-26px"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex align-items-start justify-content-between">
+          <div class="content-left">
+            <span class="text-heading">Mitra</span>
+            <div class="d-flex align-items-center my-1">
+              <h4 class="mb-0 me-2">4,567</h4>
+              <p class="text-success mb-0">(+18%)</p>
+            </div>
+            <small class="mb-0">Total Mitra</small>
+          </div>
+          <div class="avatar">
+            <span class="avatar-initial rounded bg-label-success">
+              <i class="ti ti-user-check ti-26px"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex align-items-start justify-content-between">
+          <div class="content-left">
+            <span class="text-heading">Tenaga Ahli</span>
+            <div class="d-flex align-items-center my-1">
+              <h4 class="mb-0 me-2">19,860</h4>
+              <p class="text-danger mb-0">(-14%)</p>
+            </div>
+            <small class="mb-0">Total Tenaga Ahli</small>
+          </div>
+          <div class="avatar">
+            <span class="avatar-initial rounded bg-label-warning">
+              <i class="ti ti-user-search ti-26px"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex align-items-start justify-content-between">
+          <div class="content-left">
+            <span class="text-heading">Teknisi</span>
+            <div class="d-flex align-items-center my-1">
+              <h4 class="mb-0 me-2">237</h4>
+              <p class="text-success mb-0">(+42%)</p>
+            </div>
+            <small class="mb-0">Total Teknisi</small>
+          </div>
+          <div class="avatar">
+            <span class="avatar-initial rounded bg-label-warning">
+              <i class="ti ti-user-cog ti-26px"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+@endsection
 
 </body>
 </html>
