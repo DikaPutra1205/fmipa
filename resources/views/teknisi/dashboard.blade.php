@@ -61,12 +61,12 @@ use Illuminate\Support\Facades\Auth;
     <table class="datatables-ajax table">
       <thead>
         <tr>
-          <th>No</th>
+          <th>Nomor</th>
           <th>Nama</th>
           <th>Email</th>
           <th>Role</th>
           <th>Nama Koordinator</th>
-          <th>No Telp</th>
+          <th>No Telepon</th>
           <th>Status</th>
           @if(Auth::user()->role === 'admin')
           <th>Aksi</th>
