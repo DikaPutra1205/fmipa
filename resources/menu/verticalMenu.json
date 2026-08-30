@@ -43,7 +43,7 @@
       "slug": "alat-bahan"
     },
     {
-      "url": "sample-material",
+      "url": "/sample-material",
       "name": "Sample Material",
       "slug": "sample-material"
     },
@@ -51,27 +51,27 @@
       "menuHeader": "Uji Material"
     },
     {
-      "url": "modul/xrd",
+      "url": "/modul/xrd",
       "name": "XRD",
       "slug": "xrd"
     },
     {
-      "url": "modul/xrf",
+      "url": "/modul/xrf",
       "name": "XRF",
       "slug": "xrf"
     },
     {
-      "url": "modul/SEM-EDX",
+      "url": "/modul/SEM-EDX",
       "name": "SEM-EDX",
       "slug": "SEM-EDX"
     },
     {
-      "url": "modul/UV-VIS",
+      "url": "/modul/UV-VIS",
       "name": "UV-VIS",
       "slug": "UV-VIS"
     },
     {
-      "url": "modul/FTIR",
+      "url": "/modul/FTIR",
       "name": "FTIR",
       "slug": "FTIR"
     },
@@ -79,7 +79,7 @@
       "menuHeader": "Cetak Laporan"
     },
     {
-      "url": "hasil-uji",
+      "url": "/hasil-uji",
       "name": "Laporan Hasil Uji",
       "slug": "hasil-uji"
     }

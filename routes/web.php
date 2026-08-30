@@ -17,13 +17,12 @@ use App\Http\Controllers\TestingTrackerController;
 use App\Http\Controllers\PaymentWizardController;
 use App\Http\Controllers\HasilUjiController;
 
-Route::get('/', function () {
-    return redirect('/dashboard');
-});
-
 Route::get('/', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified']);
 
 // Profile
 Route::middleware('auth')->group(function () {
